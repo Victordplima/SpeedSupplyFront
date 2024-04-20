@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 
-const PedidoCard = ({ nomeEmpresa, idPedido, dataHoraEntrega }) => {
+const PedidoCardDistribuidora = ({ nomeCliente, idPedido, rua, bairro, numero }) => {
     return (
         <Pressable
             android_ripple={{ color: "#CCC" }}
@@ -9,17 +9,19 @@ const PedidoCard = ({ nomeEmpresa, idPedido, dataHoraEntrega }) => {
         >
             <View style={styles.topContent}>
                 <View style={styles.leftContent}>
-                    <Text style={styles.text}>{nomeEmpresa}</Text>
+                    <Text style={styles.text}>{nomeCliente}</Text>
                 </View>
                 <View style={styles.rightContent}>
                     <Text style={styles.textId}>#{idPedido}</Text>
                 </View>
             </View>
             <View style={styles.bottomContent}>
-                <Text style={styles.subtitle}>Data e hora de entrega:</Text>
-                <Text style={styles.bottomText}>{dataHoraEntrega}</Text>
+                <Text style={styles.subtitle}>Endereço:</Text>
+                <Text style={styles.bottomText}>Rua: <Text style={styles.endereçoText}>{rua}</Text></Text>
+                <Text style={styles.bottomText}>Bairro: <Text style={styles.endereçoText}>{bairro}</Text></Text>
+                <Text style={styles.bottomText}>Número: <Text style={styles.endereçoText}>{numero}</Text></Text>
             </View>
-        </Pressable >
+        </Pressable>
     );
 };
 
@@ -61,11 +63,10 @@ const styles = StyleSheet.create({
     subtitle: {
         fontSize: 14,
         color: 'gray',
-        //fontWeight: 'bold',
     },
     text: {
-        fontSize: 16,
-        //fontWeight: 'bold',
+        fontSize: 18,
+        color:'black',
     },
     textId:{
         color: 'gray',
@@ -73,8 +74,12 @@ const styles = StyleSheet.create({
     },
     bottomText: {
         fontSize: 14,
-        fontWeight: 'bold',
+        //fontWeight: 'bold',
     },
+    endereçoText:{
+        fontSize:14,
+        fontWeight: 'bold',
+    }
 });
 
-export default PedidoCard;
+export default PedidoCardDistribuidora;

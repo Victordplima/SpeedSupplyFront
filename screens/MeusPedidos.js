@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
-import PedidoCard from '../components/PedidoCard';
-import CategoriaSelector from '../components/SeletorCategoria';
+import { View, ScrollView } from 'react-native';
+import PedidoCard from '../components/Cliente/PedidoCard';
+import CategoriaSelector from '../components/Cliente/SeletorCategoria';
 
-function Pedidos() {
+function MeusPedidos() {
     const [selectedCategory, setSelectedCategory] = useState('Em Andamento');
 
     const pedidos = [
+        {
+            nomeEmpresa: 'Empresa A',
+            idPedido: '123456',
+            dataHoraEntrega: '18/04/2024 10:00',
+            status: 'Em Andamento',
+        },
         {
             nomeEmpresa: 'Empresa A',
             idPedido: '123456',
@@ -47,4 +53,4 @@ function Pedidos() {
     );
 }
 
-export default Pedidos;
+export default MeusPedidos;
