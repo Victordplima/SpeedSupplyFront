@@ -47,7 +47,7 @@ function MainTabs() {
           ),
         }}
       />
-      <Tab.Screen
+      {/*<Tab.Screen
         name='Clientes'
         component={PedidosCliente}
         options={{
@@ -55,8 +55,8 @@ function MainTabs() {
             <Ionicons name="person-outline" size={size} color={color} />
           ),
         }}
-      />
-    </Tab.Navigator>
+      />*/}
+      </Tab.Navigator>
   );
 }
 

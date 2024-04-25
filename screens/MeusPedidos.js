@@ -12,18 +12,27 @@ function MeusPedidos() {
             idPedido: '123456',
             dataHoraEntrega: '18/04/2024 10:00',
             status: 'Em Andamento',
+            endereco: 'Rua A, 123',
+            nomeProduto: 'Produto X',
+            quantidadeProduto: 2,
         },
         {
             nomeEmpresa: 'Empresa A',
             idPedido: '123456',
             dataHoraEntrega: '18/04/2024 10:00',
             status: 'Em Andamento',
+            endereco: 'Rua B, 456',
+            nomeProduto: 'Produto Y',
+            quantidadeProduto: 1,
         },
         {
             nomeEmpresa: 'Empresa B',
             idPedido: '789012',
             dataHoraEntrega: '19/04/2024 15:30',
             status: 'Completo',
+            endereco: 'Rua C, 789',
+            nomeProduto: 'Produto Z',
+            quantidadeProduto: 3,
         },
     ];
 
@@ -46,6 +55,10 @@ function MeusPedidos() {
                         nomeEmpresa={pedido.nomeEmpresa}
                         idPedido={pedido.idPedido}
                         dataHoraEntrega={pedido.dataHoraEntrega}
+                        statusPedido={pedido.status}
+                        endereco={pedido.endereco}
+                        nomeProduto={pedido.nomeProduto}
+                        quantidadeProduto={pedido.quantidadeProduto}
                     />
                 ))}
             </ScrollView>
