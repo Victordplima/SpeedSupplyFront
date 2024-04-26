@@ -10,6 +10,7 @@ import PedidoCard from './components/Cliente/PedidoCard.js';
 import PedidosCliente from './screens/PedidosCliente.js';
 import ProdutosDistribuidora from './screens/ProdutosDistribuidora.js';
 import PedidosDistribuidora from './screens/PedidosDistribuidora.js';
+import FeedDistribuidora from './screens/FeedDistribuidora.js';
 
 
 const Tab = createBottomTabNavigator();
@@ -44,6 +45,15 @@ function MainTabs() {
       <Tab.Screen
         name='Meus Pedidos'
         component={Pedidos}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="list-outline" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name='Feed'
+        component={FeedDistribuidora}
         options={{
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="list-outline" size={size} color={color} />
