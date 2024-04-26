@@ -8,6 +8,9 @@ import Cadastro from './screens/Cadastro.js';
 import Pedidos from './screens/MeusPedidos.js';
 import PedidoCard from './components/Cliente/PedidoCard.js';
 import PedidosCliente from './screens/PedidosCliente.js';
+import ProdutosDistribuidora from './screens/ProdutosDistribuidora.js';
+import PedidosDistribuidora from './screens/PedidosDistribuidora.js';
+
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -56,7 +59,34 @@ function MainTabs() {
           ),
         }}
       />*/}
-      </Tab.Navigator>
+      <Tab.Screen
+        name='Produtos'
+        component={DistribuidoraStack}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="person-outline" size={size} color={color} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
+}
+
+// Stack Navigator para tela de Produtos e Pedidos Distribuidora
+function DistribuidoraStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name='ProdutosDistribuidora'
+        component={ProdutosDistribuidora}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name='PedidosDistribuidora'
+        component={PedidosDistribuidora}
+        options={{ headerShown: false }}
+      />
+    </Stack.Navigator>
   );
 }
 
