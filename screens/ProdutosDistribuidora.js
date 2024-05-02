@@ -42,7 +42,7 @@ const ProdutosDistribuidora = ({ navigation }) => {
                     </Pressable>
                 </View>
             </View>
-
+            
             <ScrollView style={styles.scrollContainer}>
                 {produtos.map((produto, index) => (
                     <View key={index} style={[styles.produtoItem, index % 2 === 0 ? styles.produtoItemPar : styles.produtoItemImpar]}>

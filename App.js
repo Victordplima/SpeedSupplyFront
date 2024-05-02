@@ -4,13 +4,14 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
 import Login from './screens/Login.js';
-import Cadastro from './screens/Cadastro.js';
+import Cadastro from './screens/CadastroEtapa1.js';
 import Pedidos from './screens/MeusPedidos.js';
 import PedidoCard from './components/Cliente/PedidoCard.js';
 import PedidosCliente from './screens/PedidosCliente.js';
 import ProdutosDistribuidora from './screens/ProdutosDistribuidora.js';
 import PedidosDistribuidora from './screens/PedidosDistribuidora.js';
 import FeedDistribuidora from './screens/FeedDistribuidora.js';
+import CadastroEtapa2 from './screens/CadastroEtapa2.js';
 
 
 const Tab = createBottomTabNavigator();
@@ -42,21 +43,33 @@ function MainTabs() {
           ),
         }}
       />
+
+      <Tab.Screen
+        name='Cadastro Etapa 2'
+        component={CadastroEtapa2}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="add-circle-outline" size={size} color={color} />
+          ),
+        }}
+      />
+
+      <Tab.Screen
+        name='Distibuidora'
+        component={FeedDistribuidora}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="archive-outline" size={size} color={color} />
+          ),
+        }}
+      />
+
       <Tab.Screen
         name='Meus Pedidos'
         component={Pedidos}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="list-outline" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name='Feed'
-        component={FeedDistribuidora}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="list-outline" size={size} color={color} />
+            <Ionicons name="cart-outline" size={size} color={color} />
           ),
         }}
       />
@@ -74,7 +87,7 @@ function MainTabs() {
         component={DistribuidoraStack}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person-outline" size={size} color={color} />
+            <Ionicons name="cube-outline" size={size} color={color} />
           ),
         }}
       />
