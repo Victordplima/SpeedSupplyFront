@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Pressable} from 'react-native';
 
-const FeedDistribuidora = () => {
+const FeedDistribuidora = ({ navigation }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [expandedCard, setExpandedCard] = useState(null);
 
@@ -21,20 +21,12 @@ const FeedDistribuidora = () => {
             nome: 'Distribuidora A',
             descricao: 'Descrição da Distribuidora A',
             endereco: 'Endereço da Distribuidora A',
-            produtos: [
-                { id: 1, nome: 'Produto A', preco: 10 },
-                { id: 2, nome: 'Produto B', preco: 15 },
-            ],
         },
         {
             id: 2,
             nome: 'Distribuidora B',
             descricao: 'Descrição da Distribuidora B',
             endereco: 'Endereço da Distribuidora B',
-            produtos: [
-                { id: 1, nome: 'Produto C', preco: 20 },
-                { id: 2, nome: 'Produto D', preco: 25 },
-            ],
         },
     ];
 
@@ -58,15 +50,11 @@ const FeedDistribuidora = () => {
                                 <View>
                                     <Text style={styles.descricao}>{distribuidora.descricao}</Text>
                                     <Text style={styles.endereco}>{distribuidora.endereco}</Text>
-                                    <Text style={styles.produtosTitle}>Produtos oferecidos:</Text>
-                                    {distribuidora.produtos.map((produto) => (
-                                        <Text key={produto.id} style={styles.produto}>
-                                            {produto.nome} - R$ {produto.preco}
-                                        </Text>
-                                    ))}
-                                    <TouchableOpacity style={styles.button}>
+                                    
+                                    <Pressable style={styles.button} onPress={() => navigation.navigate('PerfilDistribuidora')}>
                                         <Text style={styles.buttonText}>Fazer Pedido</Text>
-                                    </TouchableOpacity>
+                                    
+                                    </Pressable>
                                 </View>
                             )}
                         </View>

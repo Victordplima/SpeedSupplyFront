@@ -10,6 +10,7 @@ import ProdutosDistribuidora from './screens/LadoDistribuidora/ProdutosDistribui
 import PedidosDistribuidora from './screens/LadoDistribuidora/PedidosDistribuidora.js';
 import FeedDistribuidora from './screens/LadoCliente/FeedDistribuidora.js';
 import CadastroEtapa2 from './screens/CadastroEtapa2.js';
+import PerfilDistribuidora from './screens/LadoCliente/PerfilDistribuidora.js';
 
 
 const Tab = createBottomTabNavigator();
@@ -52,7 +53,7 @@ function MainTabs() {
         }}
       />
 
-      <Tab.Screen
+      {/*<Tab.Screen
         name='Distibuidora'
         component={FeedDistribuidora}
         options={{
@@ -60,11 +61,21 @@ function MainTabs() {
             <Ionicons name="archive-outline" size={size} color={color} />
           ),
         }}
-      />
+      />*/}
 
       <Tab.Screen
         name='Meus Pedidos'
         component={Pedidos}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="cart-outline" size={size} color={color} />
+          ),
+        }}
+      />
+
+      <Tab.Screen
+        name='Perfil Distribuidora'
+        component={DistribuidoraPerfilStack}
         options={{
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="cart-outline" size={size} color={color} />
@@ -89,6 +100,7 @@ function MainTabs() {
           ),
         }}
       />
+      
     </Tab.Navigator>
   );
 }
@@ -111,6 +123,23 @@ function DistribuidoraStack() {
   );
 }
 
+function DistribuidoraPerfilStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name='FeedDistribuidora'
+        component={FeedDistribuidora}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name='PerfilDistribuidora'
+        component={PerfilDistribuidora}
+        options={{ headerShown: false }}
+      />
+    </Stack.Navigator>
+  );
+}
+
 export default function App() {
   return (
     <NavigationContainer>
@@ -124,3 +153,4 @@ export default function App() {
     </NavigationContainer>
   );
 }
+
