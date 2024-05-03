@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, ScrollView } from 'react-native';
-import PedidoCard from '../../components/Cliente/PedidoCard';
+import PedidoCard from '../../components/Cliente/PedidoCard'
 import CategoriaSelector from '../../components/Cliente/SeletorCategoria';
 
 function MeusPedidos() {
@@ -10,8 +10,8 @@ function MeusPedidos() {
         {
             nomeEmpresa: 'Empresa A',
             idPedido: '123456',
-            dataHoraEntrega: '18/04/2024 10:00',
-            status: 'Em Andamento',
+            dataHoraPedido: '18/04/2024 10:00',
+            status: 'Cancelado',
             endereco: 'Rua A, 123',
             nomeProduto: 'Produto X',
             quantidadeProduto: 2,
@@ -19,8 +19,8 @@ function MeusPedidos() {
         {
             nomeEmpresa: 'Empresa A',
             idPedido: '123456',
-            dataHoraEntrega: '18/04/2024 10:00',
-            status: 'Em Andamento',
+            dataHoraPedido: '18/04/2024 10:00',
+            status: 'Em Análise',
             endereco: 'Rua B, 456',
             nomeProduto: 'Produto Y',
             quantidadeProduto: 1,
@@ -28,8 +28,8 @@ function MeusPedidos() {
         {
             nomeEmpresa: 'Empresa B',
             idPedido: '789012',
-            dataHoraEntrega: '19/04/2024 15:30',
-            status: 'Completo',
+            dataHoraPedido: '19/04/2024 15:30',
+            status: 'Rejeitado',
             endereco: 'Rua C, 789',
             nomeProduto: 'Produto Z',
             quantidadeProduto: 3,
@@ -54,7 +54,7 @@ function MeusPedidos() {
                         key={index}
                         nomeEmpresa={pedido.nomeEmpresa}
                         idPedido={pedido.idPedido}
-                        dataHoraEntrega={pedido.dataHoraEntrega}
+                        dataHoraPedido={pedido.dataHoraPedido}
                         statusPedido={pedido.status}
                         endereco={pedido.endereco}
                         nomeProduto={pedido.nomeProduto}

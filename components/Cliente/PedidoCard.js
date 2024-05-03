@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 
-const PedidoCard = ({ nomeEmpresa, idPedido, dataHoraEntrega, statusPedido, endereco, nomeProduto, quantidadeProduto }) => {
+const PedidoCard = ({ nomeEmpresa, idPedido, dataHoraPedido, statusPedido, endereco, nomeProduto, quantidadeProduto }) => {
     const [expanded, setExpanded] = useState(false);
 
     const toggleExpansion = () => {
@@ -23,13 +23,13 @@ const PedidoCard = ({ nomeEmpresa, idPedido, dataHoraEntrega, statusPedido, ende
                 </View>
             </View>
             <View style={styles.bottomContent}>
-                <Text style={styles.subtitle}>Data e hora de entrega:</Text>
-                <Text style={styles.bottomText}>{dataHoraEntrega}</Text>
+                <Text style={styles.subtitle}>Data e hora do pedido:</Text>
+                <Text style={styles.bottomText}>{dataHoraPedido}</Text>
             </View>
             {expanded && (
                 <View style={styles.expandedContent}>
-                    <Text style={styles.subtitle}>Status do Pedido:</Text>
-                    <Text style={styles.bottomText}>{statusPedido}</Text>
+                    {/*<Text style={styles.subtitle}>Status do Pedido:</Text>*/}
+                    {/*<Text style={styles.bottomText}>{statusPedido}</Text>*/}
                     <Text style={styles.subtitle}>Endereço:</Text>
                     <Text style={styles.bottomText}>{endereco}</Text>
                     <Text style={styles.subtitle}>Nome do Produto:</Text>
