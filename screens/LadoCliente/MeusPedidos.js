@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, ScrollView } from 'react-native';
-import PedidoCard from '../components/Cliente/PedidoCard';
-import CategoriaSelector from '../components/Cliente/SeletorCategoria';
+import PedidoCard from '../../components/Cliente/PedidoCard';
+import CategoriaSelector from '../../components/Cliente/SeletorCategoria';
 
 function MeusPedidos() {
     const [selectedCategory, setSelectedCategory] = useState('Em Andamento');

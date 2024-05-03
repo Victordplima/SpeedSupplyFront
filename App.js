@@ -5,12 +5,10 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
 import Login from './screens/Login.js';
 import Cadastro from './screens/CadastroEtapa1.js';
-import Pedidos from './screens/MeusPedidos.js';
-import PedidoCard from './components/Cliente/PedidoCard.js';
-import PedidosCliente from './screens/PedidosCliente.js';
-import ProdutosDistribuidora from './screens/ProdutosDistribuidora.js';
-import PedidosDistribuidora from './screens/PedidosDistribuidora.js';
-import FeedDistribuidora from './screens/FeedDistribuidora.js';
+import Pedidos from './screens/LadoCliente/MeusPedidos.js';
+import ProdutosDistribuidora from './screens/LadoDistribuidora/ProdutosDistribuidora.js';
+import PedidosDistribuidora from './screens/LadoDistribuidora/PedidosDistribuidora.js';
+import FeedDistribuidora from './screens/LadoCliente/FeedDistribuidora.js';
 import CadastroEtapa2 from './screens/CadastroEtapa2.js';
 
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, ScrollView } from 'react-native';
-import PedidoCardDistribuidora from '../components/Distribuidora/PedidoCardDistribuidora';
-import CategoriaSelectorDistribuidora from '../components/Distribuidora/SeletorCategoria';
+import PedidoCardDistribuidora from '../../components/Distribuidora/PedidoCardDistribuidora';
+import CategoriaSelectorDistribuidora from '../../components/Distribuidora/SeletorCategoria';
 
 function PedidosCliente() {
     const [selectedCategory, setSelectedCategory] = useState('Em Andamento');
