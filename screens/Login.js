@@ -7,7 +7,7 @@ function Login({ navigation }) {
     return (
         <ImageBackground source={require('../assets/backgroundLogin.png')} style={styles.background}>
             <View>
-                <Text style={styles.title}>Login</Text>
+                <Text style={styles.title}>Bem-vindo de volta!</Text>
             </View>
             <View style={styles.container}>
                 <View style={styles.inputContainer}>

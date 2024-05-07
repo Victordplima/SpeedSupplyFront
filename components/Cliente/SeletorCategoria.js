@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
     },
     selectedCategory: {
-        backgroundColor: '#007AFF',
+        backgroundColor: '#018ABE',
     },
     categoryText: {
         fontSize: 16,

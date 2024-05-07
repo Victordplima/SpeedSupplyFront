@@ -17,43 +17,43 @@ const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 function MainTabs() {
-  return (
-    <Tab.Navigator
-      screenOptions={{
-        activeTintColor: 'blue',
-        inactiveTintColor: 'gray',
-      }}
-    >
-      <Tab.Screen
-        name='Login'
-        component={Login}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person-outline" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name='Cadastro'
-        component={Cadastro}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="add-circle-outline" size={size} color={color} />
-          ),
-        }}
-      />
+    return (
+        <Tab.Navigator
+            screenOptions={{
+                activeTintColor: 'blue',
+                inactiveTintColor: 'gray',
+            }}
+        >
+            <Tab.Screen
+                name='Login'
+                component={Login}
+                options={{
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="person-outline" size={size} color={color} />
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name='Cadastro'
+                component={Cadastro}
+                options={{
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="add-circle-outline" size={size} color={color} />
+                    ),
+                }}
+            />
 
-      <Tab.Screen
-        name='Cadastro Etapa 2'
-        component={CadastroEtapa2}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="add-circle-outline" size={size} color={color} />
-          ),
-        }}
-      />
+            <Tab.Screen
+                name='Cadastro Etapa 2'
+                component={CadastroEtapa2}
+                options={{
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="add-circle-outline" size={size} color={color} />
+                    ),
+                }}
+            />
 
-      {/*<Tab.Screen
+            {/*<Tab.Screen
         name='Distibuidora'
         component={FeedDistribuidora}
         options={{
@@ -63,26 +63,26 @@ function MainTabs() {
         }}
       />*/}
 
-      <Tab.Screen
-        name='Meus Pedidos'
-        component={Pedidos}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="cart-outline" size={size} color={color} />
-          ),
-        }}
-      />
+            <Tab.Screen
+                name='Meus Pedidos'
+                component={Pedidos}
+                options={{
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="cart-outline" size={size} color={color} />
+                    ),
+                }}
+            />
 
-      <Tab.Screen
-        name='Perfil Distribuidora'
-        component={DistribuidoraPerfilStack}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="cart-outline" size={size} color={color} />
-          ),
-        }}
-      />
-      {/*<Tab.Screen
+            <Tab.Screen
+                name='Perfil Distribuidora'
+                component={DistribuidoraPerfilStack}
+                options={{
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="cart-outline" size={size} color={color} />
+                    ),
+                }}
+            />
+            {/*<Tab.Screen
         name='Clientes'
         component={PedidosCliente}
         options={{
@@ -91,66 +91,66 @@ function MainTabs() {
           ),
         }}
       />*/}
-      <Tab.Screen
-        name='Produtos'
-        component={DistribuidoraStack}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="cube-outline" size={size} color={color} />
-          ),
-        }}
-      />
-      
-    </Tab.Navigator>
-  );
+            <Tab.Screen
+                name='Carga'
+                component={DistribuidoraStack}
+                options={{
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="cube-outline" size={size} color={color} />
+                    ),
+                }}
+            />
+
+        </Tab.Navigator>
+    );
 }
 
 // Stack Navigator para tela de Produtos e Pedidos Distribuidora
 function DistribuidoraStack() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name='ProdutosDistribuidora'
-        component={ProdutosDistribuidora}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name='PedidosDistribuidora'
-        component={PedidosDistribuidora}
-        options={{ headerShown: false }}
-      />
-    </Stack.Navigator>
-  );
+    return (
+        <Stack.Navigator>
+            <Stack.Screen
+                name='ProdutosDistribuidora'
+                component={ProdutosDistribuidora}
+                options={{ headerShown: false }}
+            />
+            <Stack.Screen
+                name='PedidosDistribuidora'
+                component={PedidosDistribuidora}
+                options={{ headerShown: false }}
+            />
+        </Stack.Navigator>
+    );
 }
 
 function DistribuidoraPerfilStack() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name='FeedDistribuidora'
-        component={FeedDistribuidora}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name='PerfilDistribuidora'
-        component={PerfilDistribuidora}
-        options={{ headerShown: false }}
-      />
-    </Stack.Navigator>
-  );
+    return (
+        <Stack.Navigator>
+            <Stack.Screen
+                name='FeedDistribuidora'
+                component={FeedDistribuidora}
+                options={{ headerShown: false }}
+            />
+            <Stack.Screen
+                name='PerfilDistribuidora'
+                component={PerfilDistribuidora}
+                options={{ headerShown: false }}
+            />
+        </Stack.Navigator>
+    );
 }
 
 export default function App() {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name='MainTabs'
-          component={MainTabs}
-          options={{ headerShown: false }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+    return (
+        <NavigationContainer>
+            <Stack.Navigator>
+                <Stack.Screen
+                    name='MainTabs'
+                    component={MainTabs}
+                    options={{ headerShown: false }}
+                />
+            </Stack.Navigator>
+        </NavigationContainer>
+    );
 }
 
