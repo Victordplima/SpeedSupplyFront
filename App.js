@@ -11,6 +11,7 @@ import PedidosDistribuidora from './screens/LadoDistribuidora/PedidosDistribuido
 import FeedDistribuidora from './screens/LadoCliente/FeedDistribuidora.js';
 import CadastroEtapa2 from './screens/CadastroEtapa2.js';
 import PerfilDistribuidora from './screens/LadoCliente/PerfilDistribuidora.js';
+import TelaInicial from './screens/TelaInicial.js';
 
 
 const Tab = createBottomTabNavigator();
@@ -25,44 +26,14 @@ function MainTabs() {
             }}
         >
             <Tab.Screen
-                name='Login'
-                component={Login}
+                name='LoginCadastro'
+                component={LoginCadastro}
                 options={{
                     tabBarIcon: ({ color, size }) => (
-                        <Ionicons name="person-outline" size={size} color={color} />
+                        <Ionicons name="cube-outline" size={size} color={color} />
                     ),
                 }}
             />
-            <Tab.Screen
-                name='Cadastro'
-                component={Cadastro}
-                options={{
-                    tabBarIcon: ({ color, size }) => (
-                        <Ionicons name="add-circle-outline" size={size} color={color} />
-                    ),
-                }}
-            />
-
-            <Tab.Screen
-                name='Cadastro Etapa 2'
-                component={CadastroEtapa2}
-                options={{
-                    tabBarIcon: ({ color, size }) => (
-                        <Ionicons name="add-circle-outline" size={size} color={color} />
-                    ),
-                }}
-            />
-
-            {/*<Tab.Screen
-        name='Distibuidora'
-        component={FeedDistribuidora}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="archive-outline" size={size} color={color} />
-          ),
-        }}
-      />*/}
-
             <Tab.Screen
                 name='Meus Pedidos'
                 component={Pedidos}
@@ -72,7 +43,6 @@ function MainTabs() {
                     ),
                 }}
             />
-
             <Tab.Screen
                 name='Perfil Distribuidora'
                 component={DistribuidoraPerfilStack}
@@ -82,15 +52,6 @@ function MainTabs() {
                     ),
                 }}
             />
-            {/*<Tab.Screen
-        name='Clientes'
-        component={PedidosCliente}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person-outline" size={size} color={color} />
-          ),
-        }}
-      />*/}
             <Tab.Screen
                 name='Carga'
                 component={DistribuidoraStack}
@@ -134,6 +95,34 @@ function DistribuidoraPerfilStack() {
             <Stack.Screen
                 name='PerfilDistribuidora'
                 component={PerfilDistribuidora}
+                options={{ headerShown: false }}
+            />
+        </Stack.Navigator>
+    );
+}
+
+
+function LoginCadastro() {
+    return (
+        <Stack.Navigator>
+            <Stack.Screen
+                name='Tela Inicial'
+                component={TelaInicial}
+                options={{ headerShown: false }}
+            />
+            <Stack.Screen
+                name='Login'
+                component={Login}
+                options={{ headerShown: false }}
+            />
+            <Stack.Screen
+                name='Cadastro'
+                component={Cadastro}
+                options={{ headerShown: false }}
+            />
+            <Stack.Screen
+                name='Cadastro Etapa 2'
+                component={CadastroEtapa2}
                 options={{ headerShown: false }}
             />
         </Stack.Navigator>
