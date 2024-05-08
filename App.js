@@ -29,6 +29,7 @@ function MainTabs() {
                 name='LoginCadastro'
                 component={LoginCadastro}
                 options={{
+                    headerShown: false,
                     tabBarIcon: ({ color, size }) => (
                         <Ionicons name="cube-outline" size={size} color={color} />
                     ),
@@ -44,7 +45,7 @@ function MainTabs() {
                 }}
             />
             <Tab.Screen
-                name='Perfil Distribuidora'
+                name='Distribuidoras'
                 component={DistribuidoraPerfilStack}
                 options={{
                     tabBarIcon: ({ color, size }) => (

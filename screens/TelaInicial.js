@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground, Image } from 'react-native';
 import ButtonStyle from '../components/ButtonStyle';
 
 function TelaInicial({ navigation }) {
@@ -8,8 +8,7 @@ function TelaInicial({ navigation }) {
             <View style={styles.container}>
                 <Text style={styles.welcomeText}>Bem-vindo ao nosso aplicativo!</Text>
                 <View style={styles.logoContainer}>
-                    {/* Inserir o logotipo aqui */}
-                    <Text style={styles.logo}>LOGO</Text>
+                    <Image source={require('../assets/logo.png')} style={styles.logo} />
                 </View>
                 <View style={styles.buttonContainer}>
                     <ButtonStyle action={() => navigation.navigate('Login')} content='Logar' />
@@ -40,9 +39,8 @@ const styles = StyleSheet.create({
         marginBottom: 40,
     },
     logo: {
-        fontSize: 36,
-        fontWeight: 'bold',
-        color: '#007AFF', // Cor do logotipo
+        width: 200,
+        height: 200,
     },
     buttonContainer: {
         alignItems: 'center',
