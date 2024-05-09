@@ -12,6 +12,7 @@ import FeedDistribuidora from './screens/LadoCliente/FeedDistribuidora.js';
 import CadastroEtapa2 from './screens/CadastroEtapa2.js';
 import PerfilDistribuidora from './screens/LadoCliente/PerfilDistribuidora.js';
 import TelaInicial from './screens/TelaInicial.js';
+import Notificacoes from './screens/Notificacao.js';
 
 
 const Tab = createBottomTabNavigator();
@@ -56,6 +57,15 @@ function MainTabs() {
             <Tab.Screen
                 name='Carga'
                 component={DistribuidoraStack}
+                options={{
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="cube-outline" size={size} color={color} />
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name='Notificações'
+                component={Notificacoes}
                 options={{
                     tabBarIcon: ({ color, size }) => (
                         <Ionicons name="cube-outline" size={size} color={color} />

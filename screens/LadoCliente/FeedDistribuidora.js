@@ -40,7 +40,6 @@ const FeedDistribuidora = ({ navigation }) => {
                 value={searchQuery}
             />
 
-            {/* Lista de distribuidoras */}
             <ScrollView style={styles.scrollView}>
                 {distribuidoras.map((distribuidora, index) => (
                     <TouchableOpacity key={distribuidora.id} onPress={() => handleCardExpansion(index)}>
@@ -52,7 +51,7 @@ const FeedDistribuidora = ({ navigation }) => {
                                     <Text style={styles.endereco}>{distribuidora.endereco}</Text>
                                     
                                     <Pressable style={styles.button} onPress={() => navigation.navigate('PerfilDistribuidora')}>
-                                        <Text style={styles.buttonText}>Fazer Pedido</Text>
+                                        <Text style={styles.buttonText}>Ver Perfil</Text>
                                     
                                     </Pressable>
                                 </View>
@@ -69,7 +68,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        backgroundColor: '#fff',
     },
     searchInput: {
         height: 40,
@@ -109,7 +107,7 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
     button: {
-        backgroundColor: 'blue',
+        backgroundColor: '#018ABE',
         borderRadius: 5,
         padding: 10,
         alignItems: 'center',
