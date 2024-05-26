@@ -1,9 +1,25 @@
-import React from 'react';
-import { View, Text, StyleSheet, ImageBackground } from 'react-native';
+import React, { useState, useContext } from 'react';
+import { View, Text, StyleSheet, ImageBackground, Alert } from 'react-native';
 import InputStyle from '../components/InputStyle.js';
 import ButtonStyle from '../components/ButtonStyle.js';
+import { login as authLogin } from '../utils/http.js'; // Importar o serviço de autenticação
+import { AuthContext } from '../context/authContext'; // Importar o AuthContext
 
 function Login({ navigation }) {
+    const [email, setEmail] = useState('');
+    const [senha, setSenha] = useState('');
+    const { login } = useContext(AuthContext); // Utilizar o contexto
+
+    const handleLogin = async () => {
+        try {
+            const data = await authLogin(email, senha);
+            login(data); // Passar os dados do usuário diretamente para o contexto
+            Alert.alert('Sucesso', 'Login realizado com sucesso!');
+        } catch (error) {
+            Alert.alert('Erro', error.message);
+        }
+    };
+
     return (
         <ImageBackground source={require('../assets/backgroundLogin.png')} style={styles.background}>
             <View>
@@ -11,20 +27,27 @@ function Login({ navigation }) {
             </View>
             <View style={styles.container}>
                 <View style={styles.inputContainer}>
-                    <InputStyle content='Email' appearance={styles.styleInput} />
-                    <InputStyle content='Senha' appearance={styles.styleInput} />
+                    <InputStyle
+                        content='Email'
+                        appearance={styles.styleInput}
+                        onChangeText={setEmail}
+                    />
+                    <InputStyle
+                        content='Senha'
+                        appearance={styles.styleInput}
+                        secureTextEntry
+                        onChangeText={setSenha}
+                    />
                 </View>
 
-
-                <ButtonStyle content='Logar' />
+                <ButtonStyle content='Logar' action={handleLogin} />
                 <View style={{ marginVertical: 10 }} />
                 <ButtonStyle content='Esqueci a senha' appearance={styles.forgotPasswordButton} />
-
 
                 <View style={styles.createAccountContainer}>
                     <Text style={{ fontSize: 16 }}>Não possui uma conta?</Text>
                     <ButtonStyle
-                        action={() => navigation.navigate('Cadastro')} 
+                        action={() => navigation.navigate('Cadastro')}
                         appearance={styles.forgotPasswordButton}
                         styleContent={styles.createAccountText}
                         content='Criar conta'

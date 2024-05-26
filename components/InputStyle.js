@@ -3,7 +3,12 @@ import { TextInput, StyleSheet } from 'react-native';
 
 function InputStyle(props) {
     return (
-        <TextInput style={[styles.styleInput, props.appearance]} placeholder={props.content} />
+        <TextInput
+            style={[styles.styleInput, props.appearance]}
+            placeholder={props.content}
+            onChangeText={props.onChangeText} // Passe onChangeText para o TextInput
+            secureTextEntry={props.secureTextEntry} // Adicione secureTextEntry
+        />
     );
 }
 

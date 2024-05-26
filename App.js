@@ -1,11 +1,11 @@
-import React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import React, { useContext } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import Login from './screens/Login.js';
 import Cadastro from './screens/CadastroEtapa1.js';
-import Pedidos from './screens/LadoCliente/MeusPedidos.js';
+import MeusPedidos from './screens/LadoCliente/MeusPedidos.js';
 import ProdutosDistribuidora from './screens/LadoDistribuidora/ProdutosDistribuidora.js';
 import PedidosDistribuidora from './screens/LadoDistribuidora/PedidosDistribuidora.js';
 import FeedDistribuidora from './screens/LadoCliente/FeedDistribuidora.js';
@@ -13,12 +13,12 @@ import CadastroEtapa2 from './screens/CadastroEtapa2.js';
 import PerfilDistribuidora from './screens/LadoCliente/PerfilDistribuidora.js';
 import TelaInicial from './screens/TelaInicial.js';
 import Notificacoes from './screens/Notificacao.js';
-
+import { AuthContext, AuthProvider } from './context/authContext'; // Importe o AuthContext e AuthProvider
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-function MainTabs() {
+function MainTabsCliente() {
     return (
         <Tab.Navigator
             screenOptions={{
@@ -27,18 +27,17 @@ function MainTabs() {
             }}
         >
             <Tab.Screen
-                name='LoginCadastro'
-                component={LoginCadastro}
+                name='FeedDistribuidora'
+                component={FeedDistribuidora}
                 options={{
-                    headerShown: false,
                     tabBarIcon: ({ color, size }) => (
-                        <Ionicons name="cube-outline" size={size} color={color} />
+                        <Ionicons name="home-outline" size={size} color={color} />
                     ),
                 }}
             />
             <Tab.Screen
                 name='Meus Pedidos'
-                component={Pedidos}
+                component={MeusPedidos}
                 options={{
                     tabBarIcon: ({ color, size }) => (
                         <Ionicons name="cart-outline" size={size} color={color} />
@@ -46,52 +45,45 @@ function MainTabs() {
                 }}
             />
             <Tab.Screen
-                name='Distribuidoras'
-                component={DistribuidoraPerfilStack}
+                name='PerfilDistribuidora'
+                component={PerfilDistribuidora}
                 options={{
                     tabBarIcon: ({ color, size }) => (
-                        <Ionicons name="cart-outline" size={size} color={color} />
+                        <Ionicons name="person-outline" size={size} color={color} />
                     ),
                 }}
             />
-            <Tab.Screen
-                name='Carga'
-                component={DistribuidoraStack}
-                options={{
-                    tabBarIcon: ({ color, size }) => (
-                        <Ionicons name="cube-outline" size={size} color={color} />
-                    ),
-                }}
-            />
-            <Tab.Screen
-                name='Notificações'
-                component={Notificacoes}
-                options={{
-                    tabBarIcon: ({ color, size }) => (
-                        <Ionicons name="cube-outline" size={size} color={color} />
-                    ),
-                }}
-            />
-
         </Tab.Navigator>
     );
 }
 
-// Stack Navigator para tela de Produtos e Pedidos Distribuidora
-function DistribuidoraStack() {
+function MainTabsDistribuidora() {
     return (
-        <Stack.Navigator>
-            <Stack.Screen
-                name='ProdutosDistribuidora'
-                component={ProdutosDistribuidora}
-                options={{ headerShown: false }}
-            />
-            <Stack.Screen
+        <Tab.Navigator
+            screenOptions={{
+                activeTintColor: 'blue',
+                inactiveTintColor: 'gray',
+            }}
+        >
+            <Tab.Screen
                 name='PedidosDistribuidora'
                 component={PedidosDistribuidora}
-                options={{ headerShown: false }}
+                options={{
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="cube-outline" size={size} color={color} />
+                    ),
+                }}
             />
-        </Stack.Navigator>
+            <Tab.Screen
+                name='ProdutosDistribuidora'
+                component={ProdutosDistribuidora}
+                options={{
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="cube-outline" size={size} color={color} />
+                    ),
+                }}
+            />
+        </Tab.Navigator>
     );
 }
 
@@ -112,8 +104,7 @@ function DistribuidoraPerfilStack() {
     );
 }
 
-
-function LoginCadastro() {
+function LoginCadastroStack() {
     return (
         <Stack.Navigator>
             <Stack.Screen
@@ -140,17 +131,28 @@ function LoginCadastro() {
     );
 }
 
-export default function App() {
+function AppNavigator() {
+    const { userToken, userRole } = useContext(AuthContext); // Use userRole do contexto
+
     return (
         <NavigationContainer>
-            <Stack.Navigator>
-                <Stack.Screen
-                    name='MainTabs'
-                    component={MainTabs}
-                    options={{ headerShown: false }}
-                />
-            </Stack.Navigator>
+            {userToken ? (
+                userRole === 'cliente' ? ( // Verifica se é cliente
+                    <MainTabsCliente />
+                ) : (
+                    <MainTabsDistribuidora /> // Se não, é distribuidora
+                )
+            ) : (
+                <LoginCadastroStack />
+            )}
         </NavigationContainer>
     );
 }
 
+export default function App() {
+    return (
+        <AuthProvider>
+            <AppNavigator />
+        </AuthProvider>
+    );
+}
