@@ -1,14 +1,50 @@
-import React from 'react';
-import { View, StyleSheet, ImageBackground, Text } from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, ImageBackground, Text, Alert } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import InputStyle from '../components/InputStyle';
 import ButtonStyle from '../components/ButtonStyle';
 
 function CadastroEtapa1({ navigation }) {
+    const [userData, setUserData] = useState({
+        nome: '',
+        email: '',
+        senha: '',
+        confirmarSenha: '',
+        telefoneCelular: '',
+        cnpj_cpf: '',
+        descricao: '', // Assuming this field should be included
+    });
+
+    const handleNextStep = () => {
+        const cpfRegex = /^\d{3}\.\d{3}\.\d{3}\-\d{2}$/;
+        const cnpjRegex = /^\d{2}\.\d{3}\.\d{3}\/\d{4}\-\d{2}$/;
+        const phoneRegex = /^\d{11}$/;
+
+        if (cpfRegex.test(userData.cnpj_cpf)) {
+            userData.tipoUsuario = 'cliente';
+        } else if (cnpjRegex.test(userData.cnpj_cpf)) {
+            userData.tipoUsuario = 'distribuidora';
+        } else {
+            Alert.alert('Erro', 'CPF ou CNPJ inválido.');
+            return;
+        }
+
+        if (userData.senha !== userData.confirmarSenha) {
+            Alert.alert('Erro', 'As senhas não coincidem.');
+            return;
+        }
+
+        if (!phoneRegex.test(userData.telefoneCelular)) {
+            Alert.alert('Erro', 'Número de telefone inválido.');
+            return;
+        }
+
+        navigation.navigate('Cadastro Etapa 2', { userData });
+    };
+
     return (
         <ImageBackground source={require('../assets/backgroundLogin.png')} style={styles.background}>
             <View style={styles.container}>
-                {/* Bolinhas indicando as etapas */}
                 <View style={styles.stepIndicatorContainer}>
                     <View style={styles.stepContainer}>
                         <MaterialIcons name="fiber-manual-record" size={20} color="#007AFF" />
@@ -20,24 +56,50 @@ function CadastroEtapa1({ navigation }) {
                         <Text style={styles.stepDescription}>Etapa 2</Text>
                     </View>
                 </View>
-                {/* Inputs */}
                 <View style={styles.inputsContainer}>
-                    <InputStyle content='Nome de Usuário' appearance={styles.styleInput} />
-                    <InputStyle content='Email' appearance={styles.styleInput} />
-                    <InputStyle content='Senha' appearance={styles.styleInput} />
-                    <InputStyle content='Confirmar Senha' appearance={styles.styleInput} />
-                    <InputStyle content='Telefone' appearance={styles.styleInput} />
-                    <InputStyle content='CPF/CNPJ' appearance={styles.styleInput} />
+                    <InputStyle
+                        content='Nome de Usuário'
+                        appearance={styles.styleInput}
+                        onChangeText={(text) => setUserData({ ...userData, nome: text })}
+                    />
+                    <InputStyle
+                        content='Email'
+                        appearance={styles.styleInput}
+                        keyboardType='email-address'
+                        onChangeText={(text) => setUserData({ ...userData, email: text })}
+                    />
+                    <InputStyle
+                        content='Senha'
+                        appearance={styles.styleInput}
+                        secureTextEntry
+                        onChangeText={(text) => setUserData({ ...userData, senha: text })}
+                    />
+                    <InputStyle
+                        content='Confirmar Senha'
+                        appearance={styles.styleInput}
+                        secureTextEntry
+                        onChangeText={(text) => setUserData({ ...userData, confirmarSenha: text })}
+                    />
+                    <InputStyle
+                        content='Telefone'
+                        appearance={styles.styleInput}
+                        keyboardType='phone-pad'
+                        onChangeText={(text) => setUserData({ ...userData, telefoneCelular: text })}
+                    />
+                    <InputStyle
+                        content='CPF/CNPJ'
+                        appearance={styles.styleInput}
+                        keyboardType='numeric'
+                        onChangeText={(text) => setUserData({ ...userData, cnpj_cpf: text })}
+                    />
                 </View>
-                {/* Botão para próxima etapa */}
                 <View style={styles.buttonContainer}>
-                    <ButtonStyle action={() => navigation.navigate('Cadastro Etapa 2')} content='Próximo' />
+                    <ButtonStyle action={handleNextStep} content='Próximo' />
                 </View>
-
                 <View style={styles.createAccountContainer}>
                     <Text style={{ fontSize: 16 }}>Já possui uma conta?</Text>
                     <ButtonStyle
-                        action={() => navigation.navigate('Login')} 
+                        action={() => navigation.navigate('Login')}
                         appearance={styles.forgotPasswordButton}
                         styleContent={styles.createAccountText}
                         content='Logar'

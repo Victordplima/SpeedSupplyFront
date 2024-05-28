@@ -1,14 +1,38 @@
-import React from 'react';
-import { View, StyleSheet, ImageBackground, Text } from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, ImageBackground, Alert, Text } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import InputStyle from '../components/InputStyle';
 import ButtonStyle from '../components/ButtonStyle';
+import { signup } from '../utils/http';
 
-function CadastroEtapa2({ navigation }) {
+function CadastroEtapa2({ navigation, route }) {
+    const [addressData, setAddressData] = useState({
+        rua: '',
+        bairro: '',
+        cidade: '',
+        cep: '',
+        numero: '',
+        estado: '',
+    });
+
+    const { userData } = route.params;
+
+    const handleSignup = async () => {
+        try {
+            const fullData = { ...userData, ...addressData };
+            console.log('Dados completos para cadastro:', fullData);
+            const token = await signup(fullData);
+            Alert.alert('Sucesso', 'Cadastro realizado com sucesso!');
+            navigation.navigate('Login');
+        } catch (error) {
+            console.error('Erro ao cadastrar:', error);
+            Alert.alert('Erro', error.message || 'Erro ao cadastrar.');
+        }
+    };
+
     return (
         <ImageBackground source={require('../assets/backgroundLogin.png')} style={styles.background}>
             <View style={styles.container}>
-                {/* Bolinhas indicando as etapas */}
                 <View style={styles.stepIndicatorContainer}>
                     <View style={styles.stepContainer}>
                         <MaterialIcons name="fiber-manual-record" size={20} color="#D3D3D3" />
@@ -20,19 +44,39 @@ function CadastroEtapa2({ navigation }) {
                         <Text style={styles.stepDescription}>Etapa 2</Text>
                     </View>
                 </View>
-                {/* Inputs */}
                 <View style={styles.inputsContainer}>
-                    <InputStyle content='Rua' appearance={styles.styleInput} />
-                    <InputStyle content='Bairro' appearance={styles.styleInput} />
-                    <InputStyle content='Cidade' appearance={styles.styleInput} />
-                    <InputStyle content='CEP' appearance={styles.styleInput} />
-                    <InputStyle content='Número' appearance={styles.styleInput} />
+                    <InputStyle 
+                        content='Rua' 
+                        appearance={styles.styleInput} 
+                        onChangeText={(text) => setAddressData({ ...addressData, rua: text })}
+                    />
+                    <InputStyle 
+                        content='Bairro' 
+                        appearance={styles.styleInput} 
+                        onChangeText={(text) => setAddressData({ ...addressData, bairro: text })}
+                    />
+                    <InputStyle 
+                        content='Cidade' 
+                        appearance={styles.styleInput} 
+                        onChangeText={(text) => setAddressData({ ...addressData, cidade: text })}
+                    />
+                    <InputStyle 
+                        content='CEP' 
+                        appearance={styles.styleInput} 
+                        keyboardType='numeric'
+                        onChangeText={(text) => setAddressData({ ...addressData, cep: text })}
+                    />
+                    <InputStyle 
+                        content='Número' 
+                        appearance={styles.styleInput} 
+                        keyboardType='numeric'
+                        onChangeText={(text) => setAddressData({ ...addressData, numero: text })}
+                    />
                 </View>
-                {/* Botão para próxima etapa */}
                 <View style={styles.buttonContainer}>
-                    <ButtonStyle action={() => navigation.navigate('Login')} content='Cadastrar' />
+                    <ButtonStyle action={handleSignup} content='Cadastrar' />
                     <View style={{ marginTop: 10 }} />
-                    <ButtonStyle action={() => navigation.navigate('Cadastro')} content='Voltar' />
+                    <ButtonStyle action={() => navigation.goBack()} content='Voltar' />
                 </View>
             </View>
         </ImageBackground>
