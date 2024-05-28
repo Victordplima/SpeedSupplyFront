@@ -8,15 +8,15 @@ import { AuthContext } from '../context/authContext'; // Importar o AuthContext
 function Login({ navigation }) {
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
-    const { login } = useContext(AuthContext); // Utilizar o contexto
+    const { login } = useContext(AuthContext);
 
     const handleLogin = async () => {
         try {
-            const data = await authLogin(email, senha);
-            login(data); // Passar os dados do usuário diretamente para o contexto
+            const token = await authLogin(email, senha); // O login retorna apenas o token
+            await login(token); // Passa o token para o contexto de autenticação
             Alert.alert('Sucesso', 'Login realizado com sucesso!');
         } catch (error) {
-            Alert.alert('Erro', error.message);
+            Alert.alert('Erro', error.message || 'Erro ao fazer login');
         }
     };
 

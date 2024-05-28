@@ -87,23 +87,6 @@ function MainTabsDistribuidora() {
     );
 }
 
-function DistribuidoraPerfilStack() {
-    return (
-        <Stack.Navigator>
-            <Stack.Screen
-                name='FeedDistribuidora'
-                component={FeedDistribuidora}
-                options={{ headerShown: false }}
-            />
-            <Stack.Screen
-                name='PerfilDistribuidora'
-                component={PerfilDistribuidora}
-                options={{ headerShown: false }}
-            />
-        </Stack.Navigator>
-    );
-}
-
 function LoginCadastroStack() {
     return (
         <Stack.Navigator>
@@ -132,12 +115,12 @@ function LoginCadastroStack() {
 }
 
 function AppNavigator() {
-    const { userToken, userRole } = useContext(AuthContext); // Use userRole do contexto
+    const { userToken, userType } = useContext(AuthContext); // Use userType do contexto
 
     return (
         <NavigationContainer>
             {userToken ? (
-                userRole === 'cliente' ? ( // Verifica se é cliente
+                userType === 'cliente' ? ( // Verifica se é cliente
                     <MainTabsCliente />
                 ) : (
                     <MainTabsDistribuidora /> // Se não, é distribuidora

@@ -1,17 +1,21 @@
 import React, { createContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import jwt_decode from "jwt-decode"; // Importe a biblioteca jwt-decode
+import { jwtDecode } from "jwt-decode";
 
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
     const [userToken, setUserToken] = useState(null);
-    const [userRole, setUserRole] = useState(null);
+    const [userType, setUserType] = useState(null);
 
-    const login = async (token) => { // Não é mais necessário passar a role como argumento
+    const login = async (token) => {
         setUserToken(token);
         try {
             await AsyncStorage.setItem('userToken', token);
+            const decodedToken = jwtDecode(token); // Decodifica o token
+            setUserType(decodedToken.tipoUsuario); // Define o tipo de usuário a partir do token decodificado
+            console.log('Token:', token);
+            console.log('Tipo de usuário:', decodedToken.tipoUsuario);
         } catch (error) {
             console.error('Erro ao salvar token no AsyncStorage:', error);
         }
@@ -19,6 +23,7 @@ const AuthProvider = ({ children }) => {
 
     const logout = async () => {
         setUserToken(null);
+        setUserType(null);
         try {
             await AsyncStorage.removeItem('userToken');
         } catch (error) {
@@ -32,10 +37,8 @@ const AuthProvider = ({ children }) => {
                 const token = await AsyncStorage.getItem('userToken');
                 if (token) {
                     setUserToken(token);
-                    // Decodifique o token para obter as informações (incluindo a role)
-                    const decodedToken = jwt_decode(token);
-                    const role = decodedToken.role; // Supondo que a role esteja armazenada no campo "role" do token
-                    setUserRole(role);
+                    const decodedToken = jwtDecode(token);
+                    setUserType(decodedToken.tipoUsuario);
                 }
             } catch (error) {
                 console.error('Erro ao carregar token do AsyncStorage:', error);
@@ -45,7 +48,7 @@ const AuthProvider = ({ children }) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ userToken, userRole, login, logout }}>
+        <AuthContext.Provider value={{ userToken, userType, login, logout }}>
             {children}
         </AuthContext.Provider>
     );
