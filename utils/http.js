@@ -48,3 +48,38 @@ export const searchDistribuidoras = async (numPage, userToken) => {
         throw error.response ? error.response.data : new Error('Erro ao conectar com o servidor');
     }
 };
+
+export const getProfileInformation = async (idProfile, userToken) => {
+    try {
+        const response = await api.get(`/users/getProfileInformation/${idProfile}`, {
+            headers: {
+                Authorization: `${userToken}`,
+            },
+        });
+
+        const [produtos, [endereco]] = response.data;
+        const perfil = {
+            nome: produtos[0].nome,
+            telefone: produtos[0].telefoneCelular,
+            descricao: produtos[0].descricao,
+            produtos: produtos.map(produto => ({
+                id: produto.idProduto,
+                nomeComercial: produto.nomeComercial,
+                nomeTecnico: produto.nomeTecnico,
+                valorUnidade: produto.valorUnidade,
+                peso: produto.peso,
+                material: produto.material,
+                dimensoes: produto.dimensoes,
+                fabricante: produto.fabricante,
+                statusProduto: produto.statusProduto,
+                imagemDoUsuario: produto.imagemDoUsuario,
+            })),
+            endereco: `${endereco.rua}, ${endereco.numero} - ${endereco.bairro}, ${endereco.cidade} - ${endereco.estado}, CEP: ${endereco.cep}`,
+        };
+
+        return perfil;
+    } catch (error) {
+        console.error('Erro ao buscar informações do perfil:', error.response ? error.response.data : error.message);
+        throw error.response ? error.response.data : new Error('Erro ao conectar com o servidor');
+    }
+};

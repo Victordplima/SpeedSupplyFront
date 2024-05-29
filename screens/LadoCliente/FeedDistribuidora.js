@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Pressable, RefreshControl } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Pressable, RefreshControl, ActivityIndicator } from 'react-native';
 import { searchDistribuidoras } from '../../utils/http';
 import { AuthContext } from '../../context/authContext';
 
@@ -7,15 +7,19 @@ const FeedDistribuidora = ({ navigation }) => {
     const [expandedCard, setExpandedCard] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
     const [distribuidoras, setDistribuidoras] = useState([]);
-    const [refreshing, setRefreshing] = useState(false); // Estado para controlar o refresh
+    const [refreshing, setRefreshing] = useState(false);
+    const [loading, setLoading] = useState(true);
     const { userToken } = useContext(AuthContext);
 
     const loadDistribuidoras = async () => {
         try {
+            setLoading(true);
             const data = await searchDistribuidoras(1, userToken);
             setDistribuidoras(data);
         } catch (error) {
             console.error('Erro ao carregar distribuidoras:', error.message);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -32,14 +36,13 @@ const FeedDistribuidora = ({ navigation }) => {
     };
 
     const onRefresh = async () => {
-        setRefreshing(true); // Ativa o indicador de refresh
-        await loadDistribuidoras(); // Carrega os dados novamente
-        setRefreshing(false); // Desativa o indicador de refresh
+        setRefreshing(true);
+        await loadDistribuidoras();
+        setRefreshing(false);
     };
 
     return (
         <View style={styles.container}>
-            {/* Campo de pesquisa */}
             <View style={styles.searchContainer}>
                 <TextInput
                     style={styles.searchInput}
@@ -49,27 +52,37 @@ const FeedDistribuidora = ({ navigation }) => {
                 />
             </View>
 
-            <ScrollView
-                style={styles.scrollView}
-                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />} // Componente RefreshControl
-            >
-                {distribuidoras.map((distribuidora, index) => (
-                    <TouchableOpacity key={distribuidora.id} onPress={() => handleCardExpansion(index)}>
-                        <View style={[styles.card, expandedCard === index && styles.expandedCard]}>
-                            <Text style={styles.nome}>{distribuidora.nome}</Text>
-                            {expandedCard === index && (
-                                <View key={`expanded_${distribuidora.id}`}>
-                                    <Text style={styles.descricao}>{distribuidora.descricao}</Text>
-                                    <Text style={styles.endereco}>{distribuidora.endereco}</Text>
-                                    <Pressable style={styles.button} onPress={() => navigation.navigate('PerfilDistribuidora')}>
-                                        <Text style={styles.buttonText}>Ver Perfil</Text>
-                                    </Pressable>
-                                </View>
-                            )}
-                        </View>
-                    </TouchableOpacity>
-                ))}
-            </ScrollView>
+            {loading ? (
+                <ActivityIndicator size="large" color="#018ABE" />
+            ) : (
+                <ScrollView
+                    style={styles.scrollView}
+                    refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+                >
+                    {distribuidoras.map((distribuidora, index) => (
+                        <TouchableOpacity key={`${distribuidora.id}-${index}`} onPress={() => handleCardExpansion(index)}>
+                            <View style={[styles.card, expandedCard === index && styles.expandedCard]}>
+                                <Text style={styles.nome}>{distribuidora.nome}</Text>
+                                {expandedCard === index && (
+                                    <View>
+                                        <Text style={styles.descricao}>{distribuidora.descricao}</Text>
+                                        <Text style={styles.endereco}>{distribuidora.endereco}</Text>
+                                        <Pressable
+                                            style={styles.button}
+                                            onPress={() => {
+                                                console.log('Navigating to PerfilDistribuidora with idProfile:', distribuidora.idUsuario);
+                                                navigation.navigate('PerfilDistribuidora', { idProfile: distribuidora.idUsuario });
+                                            }}                                            
+                                        >
+                                            <Text style={styles.buttonText}>Ver Perfil</Text>
+                                        </Pressable>
+                                    </View>
+                                )}
+                            </View>
+                        </TouchableOpacity>
+                    ))}
+                </ScrollView>
+            )}
         </View>
     );
 };
