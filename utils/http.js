@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { AuthContext } from '../context/authContext';
 
 const API_URL = 'https://supplyspeedbackend2.onrender.com';
 
@@ -33,3 +34,17 @@ export const signup = async (userData) => {
     }
 };
 
+
+export const searchDistribuidoras = async (numPage, userToken) => {
+    try {
+        const response = await api.get(`/users/searchInformation/${numPage}`, {
+            headers: {
+                Authorization: `${userToken}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao buscar distribuidoras:', error.response ? error.response.data : error.message);
+        throw error.response ? error.response.data : new Error('Erro ao conectar com o servidor');
+    }
+};

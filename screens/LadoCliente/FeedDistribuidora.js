@@ -1,58 +1,68 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Pressable} from 'react-native';
+import React, { useState, useEffect, useContext } from 'react';
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Pressable, RefreshControl } from 'react-native';
+import { searchDistribuidoras } from '../../utils/http';
+import { AuthContext } from '../../context/authContext';
 
 const FeedDistribuidora = ({ navigation }) => {
-    const [searchQuery, setSearchQuery] = useState('');
     const [expandedCard, setExpandedCard] = useState(null);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [distribuidoras, setDistribuidoras] = useState([]);
+    const [refreshing, setRefreshing] = useState(false); // Estado para controlar o refresh
+    const { userToken } = useContext(AuthContext);
 
-    // Função para lidar com a expansão do card
-    const handleCardExpansion = (index) => {
-        if (expandedCard === index) {
-            setExpandedCard(null); // Fechar card se já estiver expandido
-        } else {
-            setExpandedCard(index); // Expandir card
+    const loadDistribuidoras = async () => {
+        try {
+            const data = await searchDistribuidoras(1, userToken);
+            setDistribuidoras(data);
+        } catch (error) {
+            console.error('Erro ao carregar distribuidoras:', error.message);
         }
     };
 
-    // Dados fictícios de distribuidoras e produtos
-    const distribuidoras = [
-        {
-            id: 1,
-            nome: 'Distribuidora A',
-            descricao: 'Descrição da Distribuidora A',
-            endereco: 'Endereço da Distribuidora A',
-        },
-        {
-            id: 2,
-            nome: 'Distribuidora B',
-            descricao: 'Descrição da Distribuidora B',
-            endereco: 'Endereço da Distribuidora B',
-        },
-    ];
+    useEffect(() => {
+        loadDistribuidoras();
+    }, [userToken]);
+
+    const handleCardExpansion = (index) => {
+        if (expandedCard === index) {
+            setExpandedCard(null);
+        } else {
+            setExpandedCard(index);
+        }
+    };
+
+    const onRefresh = async () => {
+        setRefreshing(true); // Ativa o indicador de refresh
+        await loadDistribuidoras(); // Carrega os dados novamente
+        setRefreshing(false); // Desativa o indicador de refresh
+    };
 
     return (
         <View style={styles.container}>
             {/* Campo de pesquisa */}
-            <TextInput
-                style={styles.searchInput}
-                placeholder="Buscar distribuidoras..."
-                onChangeText={(text) => setSearchQuery(text)}
-                value={searchQuery}
-            />
+            <View style={styles.searchContainer}>
+                <TextInput
+                    style={styles.searchInput}
+                    placeholder="Buscar distribuidoras..."
+                    onChangeText={(text) => setSearchQuery(text)}
+                    value={searchQuery}
+                />
+            </View>
 
-            <ScrollView style={styles.scrollView}>
+            <ScrollView
+                style={styles.scrollView}
+                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />} // Componente RefreshControl
+            >
                 {distribuidoras.map((distribuidora, index) => (
                     <TouchableOpacity key={distribuidora.id} onPress={() => handleCardExpansion(index)}>
-                        <View style={styles.card}>
+                        <View style={[styles.card, expandedCard === index && styles.expandedCard]}>
                             <Text style={styles.nome}>{distribuidora.nome}</Text>
                             {expandedCard === index && (
-                                <View>
+                                <View key={`expanded_${distribuidora.id}`}>
                                     <Text style={styles.descricao}>{distribuidora.descricao}</Text>
                                     <Text style={styles.endereco}>{distribuidora.endereco}</Text>
-                                    
                                     <Pressable style={styles.button} onPress={() => navigation.navigate('PerfilDistribuidora')}>
                                         <Text style={styles.buttonText}>Ver Perfil</Text>
-                                    
                                     </Pressable>
                                 </View>
                             )}
@@ -69,13 +79,24 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 20,
     },
+    searchContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 20,
+    },
     searchInput: {
         height: 40,
         borderColor: 'gray',
         borderWidth: 1,
         borderRadius: 10,
         paddingLeft: 10,
-        marginBottom: 20,
+        flex: 1,
+    },
+    reloadButton: {
+        backgroundColor: '#018ABE',
+        borderRadius: 5,
+        padding: 10,
+        marginLeft: 10,
     },
     scrollView: {
         flex: 1,
