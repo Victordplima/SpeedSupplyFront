@@ -35,8 +35,14 @@ function MainTabsCliente() {
                 },
             })}
             tabBarOptions={{
-                activeTintColor: 'blue',
-                inactiveTintColor: 'gray',
+                "tabBarActiveTintColor": "#018ABE",
+                "tabBarInactiveTintColor": "gray",
+                "tabBarStyle": [
+                    {
+                        "display": "flex"
+                    },
+                    null
+                ]
             }}
         >
             <Tab.Screen name='Distribuidoras' component={FeedDistribuidoraStack} />
@@ -48,8 +54,8 @@ function MainTabsCliente() {
 function FeedDistribuidoraStack() {
     return (
         <Stack.Navigator>
-            <Stack.Screen name="Feed Distribuidora" component={FeedDistribuidora} options={{ headerShown: false }}/>
-            <Stack.Screen name="PerfilDistribuidora" component={PerfilDistribuidora} options={{ headerShown: false }}/>
+            <Stack.Screen name="Feed Distribuidora" component={FeedDistribuidora} options={{ headerShown: false }} />
+            <Stack.Screen name="PerfilDistribuidora" component={PerfilDistribuidora} options={{ headerShown: false }} />
         </Stack.Navigator>
     );
 }
@@ -69,12 +75,18 @@ function MainTabsDistribuidora() {
                 },
             })}
             tabBarOptions={{
-                activeTintColor: 'blue',
-                inactiveTintColor: 'gray',
+                "tabBarActiveTintColor": "#018ABE",
+                "tabBarInactiveTintColor": "gray",
+                "tabBarStyle": [
+                    {
+                        "display": "flex"
+                    },
+                    null
+                ]
             }}
         >
-            <Tab.Screen name='PedidosDistribuidora' component={PedidosDistribuidora} options={{ headerShown: false }}/>
-            <Tab.Screen name='ProdutosDistribuidora' component={ProdutosDistribuidora} options={{ headerShown: false }}/>
+            <Tab.Screen name='PedidosDistribuidora' component={PedidosDistribuidora} options={{ headerShown: false }} />
+            <Tab.Screen name='ProdutosDistribuidora' component={ProdutosDistribuidora} options={{ headerShown: false }} />
         </Tab.Navigator>
     );
 }
