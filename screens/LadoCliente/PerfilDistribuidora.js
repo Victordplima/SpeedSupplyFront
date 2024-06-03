@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { AuthContext } from '../../context/authContext';
 import { getProfileInformation } from '../../utils/http';
 
-const PerfilDistribuidora = ({ route }) => {
+const PerfilDistribuidora = ({ route, navigation }) => {
     const { idProfile } = route.params;
     const { userToken } = useContext(AuthContext);
 
@@ -22,9 +22,10 @@ const PerfilDistribuidora = ({ route }) => {
                 const data = await getProfileInformation(idProfile, userToken);
                 console.log('Loaded profile:', data);
                 setPerfil(data);
+                setError(null); // Clear any previous error
             } catch (error) {
                 console.error('Erro ao carregar perfil:', error.message);
-                setError('Erro ao carregar perfil: ' + error.message);
+                setError('Erro ao carregar perfil. Tente novamente mais tarde.');
             } finally {
                 setLoading(false);
             }
@@ -61,16 +62,20 @@ const PerfilDistribuidora = ({ route }) => {
         setSelectedProduct(null);
     };
 
+    const fazerPedido = () => {
+        navigation.navigate('ConfirmacaoPedido', { idProfile, quantidades, perfil });
+    };
+
     if (loading) {
         return <ActivityIndicator size="large" color="#018ABE" />;
     }
 
     if (error) {
-        return <Text>{error}</Text>;
+        return <Text style={styles.errorText}>{error}</Text>;
     }
 
     if (!perfil) {
-        return <Text>Perfil não encontrado</Text>;
+        return <Text style={styles.errorText}>Perfil não encontrado</Text>;
     }
 
     return (
@@ -108,7 +113,7 @@ const PerfilDistribuidora = ({ route }) => {
             </ScrollView>
 
             <View style={styles.footer}>
-                <TouchableOpacity style={styles.carrinhoButton}>
+                <TouchableOpacity style={styles.carrinhoButton} onPress={fazerPedido}>
                     <Ionicons name="cart-outline" size={24} color="white" />
                     <Text style={styles.carrinhoButtonText}>Fazer Pedido</Text>
                 </TouchableOpacity>
@@ -144,8 +149,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        //paddingTop: 20,
-        backgroundColor: '#fbf2ff',
     },
     informacoes: {
         backgroundColor: 'white',
@@ -159,7 +162,6 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
-        //paddin
     },
     header: {
         flexDirection: 'row',
@@ -201,7 +203,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#E6E4E7',
         marginBottom: 10,
         borderRadius: 10,
-
     },
     infoProduto: {
         flexDirection: 'row',

@@ -9,6 +9,7 @@ const FeedDistribuidora = ({ navigation }) => {
     const [distribuidoras, setDistribuidoras] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const { userToken } = useContext(AuthContext);
 
     const loadDistribuidoras = async () => {
@@ -16,8 +17,10 @@ const FeedDistribuidora = ({ navigation }) => {
             setLoading(true);
             const data = await searchDistribuidoras(1, userToken);
             setDistribuidoras(data);
+            setError(null); // Clear any previous error
         } catch (error) {
             console.error('Erro ao carregar distribuidoras:', error.message);
+            setError('Erro ao carregar distribuidoras. Tente novamente mais tarde.');
         } finally {
             setLoading(false);
         }
@@ -28,11 +31,7 @@ const FeedDistribuidora = ({ navigation }) => {
     }, [userToken]);
 
     const handleCardExpansion = (index) => {
-        if (expandedCard === index) {
-            setExpandedCard(null);
-        } else {
-            setExpandedCard(index);
-        }
+        setExpandedCard(expandedCard === index ? null : index);
     };
 
     const onRefresh = async () => {
@@ -54,6 +53,8 @@ const FeedDistribuidora = ({ navigation }) => {
 
             {loading ? (
                 <ActivityIndicator size="large" color="#018ABE" />
+            ) : error ? (
+                <Text style={styles.errorText}>{error}</Text>
             ) : (
                 <ScrollView
                     style={styles.scrollView}
@@ -72,7 +73,7 @@ const FeedDistribuidora = ({ navigation }) => {
                                             onPress={() => {
                                                 console.log('Navigating to PerfilDistribuidora with idProfile:', distribuidora.idUsuario);
                                                 navigation.navigate('PerfilDistribuidora', { idProfile: distribuidora.idUsuario });
-                                            }}                                            
+                                            }}
                                         >
                                             <Text style={styles.buttonText}>Ver Perfil</Text>
                                         </Pressable>
@@ -105,12 +106,6 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
         flex: 1,
     },
-    reloadButton: {
-        backgroundColor: '#018ABE',
-        borderRadius: 5,
-        padding: 10,
-        marginLeft: 10,
-    },
     scrollView: {
         flex: 1,
     },
@@ -120,6 +115,9 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         padding: 10,
         marginBottom: 10,
+    },
+    expandedCard: {
+        backgroundColor: '#f0f0f0',
     },
     nome: {
         fontSize: 18,
@@ -132,14 +130,6 @@ const styles = StyleSheet.create({
     endereco: {
         marginBottom: 5,
     },
-    produtosTitle: {
-        fontWeight: 'bold',
-        marginTop: 10,
-        marginBottom: 5,
-    },
-    produto: {
-        marginBottom: 5,
-    },
     button: {
         backgroundColor: '#018ABE',
         borderRadius: 5,
@@ -150,6 +140,11 @@ const styles = StyleSheet.create({
     buttonText: {
         color: '#fff',
         fontWeight: 'bold',
+    },
+    errorText: {
+        color: 'red',
+        textAlign: 'center',
+        marginVertical: 20,
     },
 });
 

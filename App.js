@@ -1,3 +1,4 @@
+// AppNavigator.js
 import React, { useContext } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -11,6 +12,7 @@ import PedidosDistribuidora from './screens/LadoDistribuidora/PedidosDistribuido
 import FeedDistribuidora from './screens/LadoCliente/FeedDistribuidora';
 import CadastroEtapa2 from './screens/CadastroEtapa2';
 import PerfilDistribuidora from './screens/LadoCliente/PerfilDistribuidora';
+import ConfirmacaoPedido from './screens/LadoCliente/ConfirmacaoPedido';
 import TelaInicial from './screens/TelaInicial';
 import Notificacoes from './screens/Notificacao';
 import { AuthContext, AuthProvider } from './context/authContext';
@@ -35,11 +37,11 @@ function MainTabsCliente() {
                 },
             })}
             tabBarOptions={{
-                "tabBarActiveTintColor": "#018ABE",
-                "tabBarInactiveTintColor": "gray",
-                "tabBarStyle": [
+                tabBarActiveTintColor: "#018ABE",
+                tabBarInactiveTintColor: "gray",
+                tabBarStyle: [
                     {
-                        "display": "flex"
+                        display: "flex"
                     },
                     null
                 ]
@@ -56,6 +58,7 @@ function FeedDistribuidoraStack() {
         <Stack.Navigator>
             <Stack.Screen name="Feed Distribuidora" component={FeedDistribuidora} options={{ headerShown: false }} />
             <Stack.Screen name="PerfilDistribuidora" component={PerfilDistribuidora} options={{ headerShown: false }} />
+            <Stack.Screen name="ConfirmacaoPedido" component={ConfirmacaoPedido} options={{ headerShown: false }} />
         </Stack.Navigator>
     );
 }
@@ -75,11 +78,11 @@ function MainTabsDistribuidora() {
                 },
             })}
             tabBarOptions={{
-                "tabBarActiveTintColor": "#018ABE",
-                "tabBarInactiveTintColor": "gray",
-                "tabBarStyle": [
+                tabBarActiveTintColor: "#018ABE",
+                tabBarInactiveTintColor: "gray",
+                tabBarStyle: [
                     {
-                        "display": "flex"
+                        display: "flex"
                     },
                     null
                 ]

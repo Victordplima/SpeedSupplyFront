@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { AuthContext } from '../context/authContext';
 
 const API_URL = 'https://supplyspeedbackend2.onrender.com';
 
@@ -37,7 +36,7 @@ export const signup = async (userData) => {
 
 export const searchDistribuidoras = async (numPage, userToken) => {
     try {
-        const response = await api.get(`/users/searchInformation/${numPage}`, {
+        const response = await api.get(`/users/search/${numPage}`, {
             headers: {
                 Authorization: `${userToken}`,
             },
@@ -51,13 +50,18 @@ export const searchDistribuidoras = async (numPage, userToken) => {
 
 export const getProfileInformation = async (idProfile, userToken) => {
     try {
-        const response = await api.get(`/users/getProfileInformation/${idProfile}`, {
+        const response = await api.get(`/users/profile/${idProfile}`, {
             headers: {
                 Authorization: `${userToken}`,
             },
         });
 
-        const [produtos, [endereco]] = response.data;
+        const produtos = response.data;
+
+        if (produtos.length === 0) {
+            throw new Error('Perfil não encontrado');
+        }
+
         const perfil = {
             nome: produtos[0].nome,
             telefone: produtos[0].telefoneCelular,
@@ -74,12 +78,26 @@ export const getProfileInformation = async (idProfile, userToken) => {
                 statusProduto: produto.statusProduto,
                 imagemDoUsuario: produto.imagemDoUsuario,
             })),
-            endereco: `${endereco.rua}, ${endereco.numero} - ${endereco.bairro}, ${endereco.cidade} - ${endereco.estado}, CEP: ${endereco.cep}`,
+            endereco: `${produtos[0].rua}, ${produtos[0].numero} - ${produtos[0].bairro}, ${produtos[0].cidade} - ${produtos[0].estado}, CEP: ${produtos[0].cep}`,
         };
 
         return perfil;
     } catch (error) {
         console.error('Erro ao buscar informações do perfil:', error.response ? error.response.data : error.message);
+        throw error.response ? error.response.data : new Error('Erro ao conectar com o servidor');
+    }
+};
+
+export const sendRequest = async (payload, userToken) => {
+    try {
+        const response = await api.post('/requests/send', payload, {
+            headers: {
+                Authorization: `${userToken}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao enviar pedido:', error.response ? error.response.data : error.message);
         throw error.response ? error.response.data : new Error('Erro ao conectar com o servidor');
     }
 };
