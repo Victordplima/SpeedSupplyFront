@@ -6,14 +6,24 @@ function TelaInicial({ navigation }) {
     return (
         <ImageBackground source={require('../assets/backgroundLogin.png')} style={styles.background}>
             <View style={styles.container}>
-                <Text style={styles.welcomeText}>Bem-vindo ao nosso aplicativo!</Text>
+                <Text style={styles.welcomeText}>Bem-vindo ao Speed Supply!</Text>
                 <View style={styles.logoContainer}>
                     <Image source={require('../assets/logo.png')} style={styles.logo} />
                 </View>
                 <View style={styles.buttonContainer}>
-                    <ButtonStyle action={() => navigation.navigate('Login')} content='Logar' />
+                    <ButtonStyle
+                        action={() => navigation.navigate('Login')}
+                        content='Logar'
+                        container={styles.buttonContainerStyle}
+                        appearance={styles.buttonStyle}
+                    />
                     <View style={{ marginVertical: 10 }} />
-                    <ButtonStyle action={() => navigation.navigate('Cadastro')} content='Cadastrar' />
+                    <ButtonStyle
+                        action={() => navigation.navigate('Cadastro')}
+                        content='Cadastrar'
+                        container={styles.buttonContainerStyle}
+                        appearance={styles.buttonStyle}
+                    />
                 </View>
             </View>
         </ImageBackground>
@@ -44,6 +54,17 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         alignItems: 'center',
+    },
+    buttonContainerStyle: {
+        width: '100%',
+        alignItems: 'center',
+    },
+    buttonStyle: {
+        backgroundColor: '#018ABE',
+        alignItems: 'center',
+        padding: '3%',
+        borderRadius: 5,
+        width: 200, // Largura fixa para os botões
     },
 });
 

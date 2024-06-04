@@ -101,3 +101,18 @@ export const sendRequest = async (payload, userToken) => {
         throw error.response ? error.response.data : new Error('Erro ao conectar com o servidor');
     }
 };
+
+
+export const searchRequests = async (userToken) => {
+    try {
+        const response = await api.get('/requests/search', {
+            headers: {
+                Authorization: `${userToken}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao buscar pedidos:', error.response ? error.response.data : error.message);
+        throw error.response ? error.response.data : new Error('Erro ao conectar com o servidor');
+    }
+};

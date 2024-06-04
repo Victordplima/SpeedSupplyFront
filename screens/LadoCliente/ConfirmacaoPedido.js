@@ -11,15 +11,12 @@ const ConfirmacaoPedido = ({ route, navigation }) => {
     const [endereco, setEndereco] = useState('');
 
     useEffect(() => {
-        // Pegar a data e hora atual formatada como dd/MM/yyyy_HH:mm
         const now = new Date();
         const formattedDate = `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()}_${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
         setDataHora(formattedDate);
 
-        // Obter o endereço do cliente a partir do perfil
         const fetchEndereco = async () => {
             try {
-                // Decodificar o token para obter o ID do usuário
                 const decodedToken = jwtDecode(userToken);
                 const idUsuario = decodedToken.idUsuario;
                 console.log(idUsuario);
@@ -32,7 +29,6 @@ const ConfirmacaoPedido = ({ route, navigation }) => {
 
         fetchEndereco();
     }, [userToken]);
-
 
     const enviarPedido = async () => {
         const arrayProdutos = Object.keys(quantidades).map(id => [id, quantidades[id]]);
@@ -52,33 +48,51 @@ const ConfirmacaoPedido = ({ route, navigation }) => {
         }
     };
 
+    const renderItem = ({ item }) => {
+        const produto = perfil.produtos.find(p => p.id === item);
+        const quantidade = quantidades[item];
+        const precoTotal = produto.valorUnidade * quantidade;
+
+        return (
+            <View style={styles.card}>
+                <Text style={styles.itemText}>{produto.nomeComercial}</Text>
+                <Text style={styles.itemText}>Preço Unitário: R$ {produto.valorUnidade.toFixed(2)}</Text>
+                <Text style={styles.itemText}>Quantidade: {quantidade}</Text>
+                <Text style={styles.itemText}>Preço Total: R$ {precoTotal.toFixed(2)}</Text>
+            </View>
+        );
+    };
+
+    const calcularPrecoTotal = () => {
+        let total = 0;
+        Object.keys(quantidades).forEach(id => {
+            const produto = perfil.produtos.find(p => p.id === id);
+            const precoTotal = produto.valorUnidade * quantidades[id];
+            total += precoTotal;
+        });
+        return total.toFixed(2);
+    };
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Confirme seu Pedido</Text>
             <FlatList
                 data={Object.keys(quantidades)}
                 keyExtractor={item => item}
-                renderItem={({ item }) => (
-                    <View style={styles.item}>
-                        <Text style={styles.itemText}>{perfil.produtos.find(p => p.id === item).nomeComercial}: {quantidades[item]}</Text>
-                    </View>
-                )}
+                renderItem={renderItem}
             />
-            <TextInput
-                style={styles.input}
-                placeholder="Data e Hora"
-                value={dataHora}
-                editable={false}  // Tornar o campo não editável
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Endereço"
-                value={endereco}
-                editable={false}  // Tornar o campo não editável
-            />
-            <TouchableOpacity style={styles.button} onPress={enviarPedido}>
-                <Text style={styles.buttonText}>Enviar Pedido</Text>
-            </TouchableOpacity>
+            <View style={styles.footer}>
+                <Text style={styles.totalText}>Preço Total: R$ {calcularPrecoTotal()}</Text>
+                <TextInput
+                    style={styles.input}
+                    placeholder="Endereço"
+                    value={endereco}
+                    editable={false}
+                />
+                <TouchableOpacity style={styles.button} onPress={enviarPedido}>
+                    <Text style={styles.buttonText}>Enviar Pedido</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 };
@@ -94,10 +108,11 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 20,
     },
-    item: {
+    card: {
+        backgroundColor: '#F0F0F0',
         padding: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
+        borderRadius: 10,
+        marginBottom: 10,
     },
     itemText: {
         fontSize: 16,
@@ -119,6 +134,14 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 16,
         fontWeight: 'bold',
+    },
+    footer: {
+        marginTop: 20,
+    },
+    totalText: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 10,
     },
 });
 
