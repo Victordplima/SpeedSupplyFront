@@ -1,15 +1,15 @@
 import React from 'react';
 import { Pressable, Text, StyleSheet, View } from 'react-native';
 
-function ButtonStyle(props) {
+function ButtonStyle({ action, content, container, appearance, styleContent }) {
     return (
-        <View style={props.container != null ? props.container : styles.container}>
+        <View style={container != null ? container : styles.container}>
             <Pressable
-                onPress={props.action}
-                style={props.appearance != null ? props.appearance : styles.button}
+                onPress={action}
+                style={appearance != null ? appearance : styles.button}
             >
-                <Text style={props.styleContent != null ? props.styleContent : styles.text}>
-                    {props.content}
+                <Text style={styleContent != null ? styleContent : styles.text}>
+                    {content}
                 </Text>
             </Pressable>
         </View>
@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 16,
+        color: 'white',
     }
 });
 

@@ -23,7 +23,7 @@ const CategoriaSelector = ({ selectedCategory, onSelectCategory }) => {
     };
 
     useEffect(() => {
-        onSelectCategory('Em Análise');
+        onSelectCategory('Em análise');
         setShowScrollRightIndicator(true); // Inicialmente, apenas a seta para a direita é mostrada
     }, []);
 
@@ -38,14 +38,14 @@ const CategoriaSelector = ({ selectedCategory, onSelectCategory }) => {
             >
                 <View style={styles.categoryWrapper}>
                     <Pressable
-                        onPress={() => onSelectCategory('Em Análise')}
+                        onPress={() => onSelectCategory('Em análise')}
                         android_ripple={{ color: "#86B6CF", borderless: false }} // Aplicando ripple diretamente ao Pressable
                         style={[
                             styles.category,
-                            selectedCategory === 'Em Análise' && styles.selectedCategory,
+                            selectedCategory === 'Em análise' && styles.selectedCategory,
                         ]}
                     >
-                        <Text style={styles.categoryText}>Em Análise</Text>
+                        <Text style={styles.categoryText}>Em análise</Text>
                     </Pressable>
                 </View>
                 <View style={styles.categoryWrapper}>
@@ -134,6 +134,7 @@ const styles = StyleSheet.create({
     },
     selectedCategory: {
         backgroundColor: '#018ABE',
+        color: 'white',
     },
     categoryText: {
         fontSize: 16,
