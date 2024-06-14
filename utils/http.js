@@ -116,3 +116,21 @@ export const searchRequests = async (userToken) => {
         throw error.response ? error.response.data : new Error('Erro ao conectar com o servidor');
     }
 };
+
+export const cancelRequest = async (idPedido, userToken) => {
+    try {
+        const response = await api.delete(`/requests/cancel/${idPedido}`, {
+            headers: {
+                Authorization: `${userToken}`,
+            },
+        });
+        if (response.status === 200) {
+            return response.data;
+        } else {
+            throw new Error('Erro ao cancelar o pedido');
+        }
+    } catch (error) {
+        console.error('Erro ao cancelar pedido:', error.response ? error.response.data : error.message);
+        throw error.response ? error.response.data : new Error('Erro ao conectar com o servidor');
+    }
+};

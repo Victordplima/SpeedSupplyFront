@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from 'jwt-decode';
+import { isTokenExpired } from '../utils/tokenUtils';
 
 const AuthContext = createContext();
 
@@ -31,14 +32,29 @@ const AuthProvider = ({ children }) => {
         }
     };
 
+    const checkTokenValidity = async () => {
+        try {
+            const token = await AsyncStorage.getItem('userToken');
+            if (token && isTokenExpired(token)) {
+                await logout(); // Token expirado, realizar logout
+            }
+        } catch (error) {
+            console.error('Erro ao verificar a validade do token:', error);
+        }
+    };
+
     useEffect(() => {
         const loadToken = async () => {
             try {
                 const token = await AsyncStorage.getItem('userToken');
                 if (token) {
-                    setUserToken(token);
-                    const decodedToken = jwtDecode(token);
-                    setUserType(decodedToken.tipoUsuario);
+                    if (isTokenExpired(token)) {
+                        await logout(); // Token expirado, realizar logout
+                    } else {
+                        setUserToken(token);
+                        const decodedToken = jwtDecode(token);
+                        setUserType(decodedToken.tipoUsuario);
+                    }
                 }
             } catch (error) {
                 console.error('Erro ao carregar token do AsyncStorage:', error);
@@ -48,7 +64,7 @@ const AuthProvider = ({ children }) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ userToken, userType, login, logout }}>
+        <AuthContext.Provider value={{ userToken, userType, login, logout, checkTokenValidity }}>
             {children}
         </AuthContext.Provider>
     );

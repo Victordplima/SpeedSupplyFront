@@ -8,23 +8,15 @@ const CategoriaSelector = ({ selectedCategory, onSelectCategory }) => {
 
     const handleScroll = (event) => {
         const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
-
-        // Verifica se o conteúdo é rolável para a esquerda
         const isScrollableLeft = contentOffset.x > 0;
-
-        // Verifica se o conteúdo é rolável para a direita
         const isScrollableRight = contentSize.width > layoutMeasurement.width + contentOffset.x;
-
-        // Mostra a seta indicadora para a esquerda apenas se o conteúdo for rolável
         setShowScrollLeftIndicator(isScrollableLeft);
-
-        // Mostra a seta indicadora para a direita apenas se o conteúdo for rolável
-        setShowScrollRightIndicator(isScrollableRight && !isScrollableLeft); // Oculta a seta para a direita quando chegar no final
+        setShowScrollRightIndicator(isScrollableRight && !isScrollableLeft);
     };
 
     useEffect(() => {
         onSelectCategory('Em análise');
-        setShowScrollRightIndicator(true); // Inicialmente, apenas a seta para a direita é mostrada
+        setShowScrollRightIndicator(true);
     }, []);
 
     return (
@@ -39,71 +31,54 @@ const CategoriaSelector = ({ selectedCategory, onSelectCategory }) => {
                 <View style={styles.categoryWrapper}>
                     <Pressable
                         onPress={() => onSelectCategory('Em análise')}
-                        android_ripple={{ color: "#86B6CF", borderless: false }} // Aplicando ripple diretamente ao Pressable
-                        style={[
-                            styles.category,
-                            selectedCategory === 'Em análise' && styles.selectedCategory,
-                        ]}
+                        android_ripple={{ color: "#86B6CF", borderless: false }}
+                        style={[styles.category, selectedCategory === 'Em análise' && styles.selectedCategory]}
                     >
-                        <Text style={styles.categoryText}>Em análise</Text>
+                        <Text style={[styles.categoryText, selectedCategory === 'Em análise' && styles.selectedCategoryText]}>Em análise</Text>
                     </Pressable>
                 </View>
                 <View style={styles.categoryWrapper}>
                     <Pressable
                         onPress={() => onSelectCategory('Aceito')}
-                        android_ripple={{ color: "#86B6CF", borderless: false }} // Aplicando ripple diretamente ao Pressable
-                        style={[
-                            styles.category,
-                            selectedCategory === 'Aceito' && styles.selectedCategory,
-                        ]}
+                        android_ripple={{ color: "#86B6CF", borderless: false }}
+                        style={[styles.category, selectedCategory === 'Aceito' && styles.selectedCategory]}
                     >
-                        <Text style={styles.categoryText}>Aceito</Text>
+                        <Text style={[styles.categoryText, selectedCategory === 'Aceito' && styles.selectedCategoryText]}>Aceito</Text>
                     </Pressable>
                 </View>
                 <View style={styles.categoryWrapper}>
                     <Pressable
                         onPress={() => onSelectCategory('Rejeitado')}
-                        android_ripple={{ color: "#86B6CF", borderless: false }} // Aplicando ripple diretamente ao Pressable
-                        style={[
-                            styles.category,
-                            selectedCategory === 'Rejeitado' && styles.selectedCategory,
-                        ]}
+                        android_ripple={{ color: "#86B6CF", borderless: false }}
+                        style={[styles.category, selectedCategory === 'Rejeitado' && styles.selectedCategory]}
                     >
-                        <Text style={styles.categoryText}>Rejeitado</Text>
+                        <Text style={[styles.categoryText, selectedCategory === 'Rejeitado' && styles.selectedCategoryText]}>Rejeitado</Text>
                     </Pressable>
                 </View>
                 <View style={styles.categoryWrapper}>
                     <Pressable
                         onPress={() => onSelectCategory('Entregue')}
-                        android_ripple={{ color: "#86B6CF", borderless: false }} // Aplicando ripple diretamente ao Pressable
-                        style={[
-                            styles.category,
-                            selectedCategory === 'Entregue' && styles.selectedCategory,
-                        ]}
+                        android_ripple={{ color: "#86B6CF", borderless: false }}
+                        style={[styles.category, selectedCategory === 'Entregue' && styles.selectedCategory]}
                     >
-                        <Text style={styles.categoryText}>Entregue</Text>
+                        <Text style={[styles.categoryText, selectedCategory === 'Entregue' && styles.selectedCategoryText]}>Entregue</Text>
                     </Pressable>
                 </View>
                 <View style={styles.categoryWrapper}>
                     <Pressable
                         onPress={() => onSelectCategory('Cancelado')}
-                        android_ripple={{ color: "#86B6CF", borderless: false }} // Aplicando ripple diretamente ao Pressable
-                        style={[
-                            styles.category,
-                            selectedCategory === 'Cancelado' && styles.selectedCategory,
-                        ]}
+                        android_ripple={{ color: "#86B6CF", borderless: false }}
+                        style={[styles.category, selectedCategory === 'Cancelado' && styles.selectedCategory]}
                     >
-                        <Text style={styles.categoryText}>Cancelado</Text>
+                        <Text style={[styles.categoryText, selectedCategory === 'Cancelado' && styles.selectedCategoryText]}>Cancelado</Text>
                     </Pressable>
                 </View>
             </ScrollView>
-            {/* Renderiza a seta indicadora para a esquerda quando necessário */}
             {showScrollLeftIndicator && (
                 <View style={[styles.scrollIndicator, styles.scrollIndicatorLeft]}>
                     <Ionicons name="chevron-back-outline" size={24} color={'black'} />
                 </View>
             )}
-            {/* Renderiza a seta indicadora para a direita quando necessário */}
             {showScrollRightIndicator && (
                 <View style={[styles.scrollIndicator, styles.scrollIndicatorRight]}>
                     <Ionicons name="chevron-forward-outline" size={24} color={'black'} />
@@ -117,14 +92,14 @@ const styles = StyleSheet.create({
     container: {
         paddingTop: 20,
         backgroundColor: '#F0F0F0',
-        position: 'relative', // Necessário para posicionar as setas absolutamente
+        position: 'relative',
     },
     scrollContainer: {
         alignItems: 'center',
     },
     categoryWrapper: {
-        overflow: 'hidden', // Para evitar que o efeito ripple afete a altura do componente
-        height: '100%', // Para garantir que o Pressable ocupe toda a altura
+        overflow: 'hidden',
+        height: '100%',
     },
     category: {
         paddingVertical: 8,
@@ -134,6 +109,8 @@ const styles = StyleSheet.create({
     },
     selectedCategory: {
         backgroundColor: '#018ABE',
+    },
+    selectedCategoryText: {
         color: 'white',
     },
     categoryText: {
@@ -144,16 +121,16 @@ const styles = StyleSheet.create({
     scrollIndicator: {
         position: 'absolute',
         bottom: 0,
-        height: '100%', // Para cobrir toda a altura do ScrollView
+        height: '100%',
         justifyContent: 'center',
         alignItems: 'center',
         paddingHorizontal: 5,
     },
     scrollIndicatorLeft: {
-        left: 5, // Posiciona a seta indicadora para a esquerda
+        left: 5,
     },
     scrollIndicatorRight: {
-        right: 5, // Posiciona a seta indicadora para a direita
+        right: 5,
     },
 });
 

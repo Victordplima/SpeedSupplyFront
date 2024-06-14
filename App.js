@@ -1,5 +1,4 @@
-// AppNavigator.js
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -35,6 +34,12 @@ function MainTabsCliente() {
                     }
                     return <Ionicons name={iconName} size={size} color={color} />;
                 },
+                "tabBarStyle": [
+                    {
+                        "display": "flex"
+                    },
+                    null
+                ]
             })}
             tabBarOptions={{
                 tabBarActiveTintColor: "#018ABE",
@@ -106,7 +111,11 @@ function LoginCadastroStack() {
 }
 
 function AppNavigator() {
-    const { userToken, userType } = useContext(AuthContext);
+    const { userToken, userType, checkTokenValidity } = useContext(AuthContext);
+
+    useEffect(() => {
+        checkTokenValidity();
+    }, []);
 
     return (
         <NavigationContainer>

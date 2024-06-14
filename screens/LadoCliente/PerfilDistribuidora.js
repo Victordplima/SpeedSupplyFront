@@ -78,6 +78,17 @@ const PerfilDistribuidora = ({ route, navigation }) => {
         return <Text style={styles.errorText}>Perfil não encontrado</Text>;
     }
 
+    const formatarTelefone = (telefone) => {
+        // Verifica se o telefone tem a formatação correta
+        if (telefone.length === 10) {
+            return `(${telefone.substr(0, 2)}) ${telefone.substr(2, 4)}-${telefone.substr(6, 4)}`;
+        } else if (telefone.length === 11) {
+            return `(${telefone.substr(0, 2)}) ${telefone.substr(2, 5)}-${telefone.substr(7, 4)}`;
+        }
+        // Retorna o telefone sem formatação caso não corresponda ao esperado
+        return telefone;
+    };
+
     return (
         <View style={styles.container}>
             <View style={styles.informacoes}>
@@ -86,9 +97,16 @@ const PerfilDistribuidora = ({ route, navigation }) => {
                 </View>
 
                 <Text style={styles.descricao}>{perfil.descricao}</Text>
-                <Text style={styles.telefone}>Telefone: {perfil.telefone}</Text>
-                <Text style={styles.endereco}>{perfil.endereco}</Text>
+                <View style={styles.telefoneContainer}>
+                    <Ionicons name="call-outline" size={24} color="black" style={styles.icon} />
+                    <Text style={styles.telefone}>{formatarTelefone(perfil.telefone)}</Text>
+                </View>
+                <View style={styles.enderecoContainer}>
+                    <Ionicons name="location-outline" size={24} color="black" style={styles.icon} />
+                    <Text style={styles.endereco}>{perfil.endereco}</Text>
+                </View>
             </View>
+
             <TouchableOpacity style={styles.buttonLimpar} onPress={limparQuantidades}>
                 <Text style={styles.carrinhoButtonText}>Limpar</Text>
             </TouchableOpacity>
@@ -180,15 +198,20 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         paddingHorizontal: '5%',
     },
-    telefone: {
-        fontSize: 16,
-        marginBottom: 10,
-        paddingHorizontal: '10%',
-    },
-    endereco: {
-        fontSize: 16,
+    telefoneContainer: {
+        flexDirection: 'row',
         marginBottom: 10,
         paddingHorizontal: '5%',
+        justifyContent: 'flex-start',
+    },
+    enderecoContainer: {
+        flexDirection: 'row',
+        marginBottom: 10,
+        paddingHorizontal: '5%',
+        justifyContent: 'flex-start',
+    },
+    icon: {
+        marginRight: 10,
     },
     produtosContainer: {
         marginBottom: 20,

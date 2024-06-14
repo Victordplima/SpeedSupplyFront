@@ -1,4 +1,3 @@
-// Importe os componentes necessários e a função useState
 import React, { useState, useEffect, useContext } from 'react';
 import { View, ScrollView, Text, StyleSheet, RefreshControl } from 'react-native';
 import PedidoCard from '../../components/Cliente/PedidoCard';
@@ -19,7 +18,6 @@ function MeusPedidos() {
     const fetchPedidos = async () => {
         try {
             const response = await searchRequests(userToken);
-            // Formatar a data e hora dos pedidos antes de definir o estado
             const pedidosFormatados = response.map(pedido => ({
                 ...pedido,
                 dataHora: formatarDataHora(pedido.dataHora)
@@ -65,9 +63,9 @@ function MeusPedidos() {
                 ) : (
                     filteredPedidos.map((pedido, index) => (
                         <PedidoCard
-                            key={index}
+                            key={pedido.idPedido}
                             nomeEmpresa={pedido.nome}
-                            idPedido={index} // ou pedido.idPedido se tiver essa informação
+                            idPedido={pedido.idPedido}
                             dataHoraPedido={pedido.dataHora}
                             statusPedido={pedido.statusPedido}
                             endereco={`${pedido.rua}, ${pedido.numero} - ${pedido.bairro}, ${pedido.cidade} - ${pedido.estado}, CEP: ${pedido.cep}`}
