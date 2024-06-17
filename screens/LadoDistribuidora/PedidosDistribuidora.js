@@ -97,9 +97,6 @@ const PedidosDistribuidora = () => {
 
     return (
         <View style={styles.container}>
-            <Pressable onPress={() => navigation.goBack()} style={styles.backButton}>
-                <Text style={styles.backButtonText}>Voltar</Text>
-            </Pressable>
             <Text style={styles.title}>Pedidos</Text>
             <ScrollView contentContainerStyle={styles.scrollContainer}>
                 {pedidos.map((pedido) => (

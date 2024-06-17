@@ -78,9 +78,9 @@ function MainTabsDistribuidora() {
             screenOptions={({ route }) => ({
                 tabBarIcon: ({ color, size }) => {
                     let iconName;
-                    if (route.name === 'PedidosDistribuidora') {
-                        iconName = 'cube-outline';
-                    } else if (route.name === 'ProdutosDistribuidora') {
+                    if (route.name === 'Pedidos') {
+                        iconName = 'list-outline';
+                    } else if (route.name === 'Carga') {
                         iconName = 'cube-outline';
                     }
                     return <Ionicons name={iconName} size={size} color={color} />;
@@ -97,11 +97,13 @@ function MainTabsDistribuidora() {
                 ]
             }}
         >
-            <Tab.Screen name='PedidosDistribuidora' component={PedidosDistribuidora} options={{ headerShown: false }} />
-            <Tab.Screen name='ProdutosDistribuidora' component={ProdutosDistribuidora} options={{ headerShown: false }} />
+            <Tab.Screen name='Carga' component={ProdutosDistribuidora} options={{ headerShown: false }} />
+            <Tab.Screen name='Pedidos' component={PedidosDistribuidora} options={{ headerShown: false }} />
         </Tab.Navigator>
     );
 }
+
+
 
 function LoginCadastroStack() {
     return (
