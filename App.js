@@ -15,6 +15,7 @@ import ConfirmacaoPedido from './screens/LadoCliente/ConfirmacaoPedido';
 import TelaInicial from './screens/TelaInicial';
 import Notificacoes from './screens/Notificacao';
 import { AuthContext, AuthProvider } from './context/authContext';
+import Perfil from './screens/LadoCliente/Perfil';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -30,6 +31,8 @@ function MainTabsCliente() {
                     } else if (route.name === 'Meus Pedidos') {
                         iconName = 'cart-outline';
                     } else if (route.name === 'PerfilDistribuidora') {
+                        iconName = 'person-outline';
+                    } else if (route.name === 'Perfil') {
                         iconName = 'person-outline';
                     }
                     return <Ionicons name={iconName} size={size} color={color} />;
@@ -54,6 +57,7 @@ function MainTabsCliente() {
         >
             <Tab.Screen name='Distribuidoras' component={FeedDistribuidoraStack} />
             <Tab.Screen name='Meus Pedidos' component={MeusPedidos} />
+            <Tab.Screen name='Perfil' component={Perfil} />
         </Tab.Navigator>
     );
 }
