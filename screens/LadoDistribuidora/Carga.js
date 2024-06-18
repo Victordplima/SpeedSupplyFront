@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, Pressable, ScrollView, TextInput, Dimensions, A
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Carga = ({ navigation }) => {
-    const marca = "Roma Alimentos";
     const [pedidosAceitos, setPedidosAceitos] = useState(15);
     const [produtos, setProdutos] = useState([]);
     const [novoProdutoNome, setNovoProdutoNome] = useState('');
@@ -108,9 +107,7 @@ const Carga = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <View style={[styles.header, { marginTop: marginTopValue }]}>
-                <Text style={styles.headerText}>{marca}</Text>
-                <View style={styles.linha} />
+            <View style={styles.header}>
                 <Text style={styles.pedidosAceitosText}>Pedidos Aceitos: {pedidosAceitos}</Text>
                 <View style={styles.buttonContainer}>
                     <Pressable style={styles.pedidosArea} onPress={navigateToPedidos}>
@@ -228,7 +225,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     pedidosArea: {
-        backgroundColor: '#007AFF',
+        backgroundColor: '#018ABE',
         padding: 10,
         borderRadius: 5,
     },

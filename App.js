@@ -101,7 +101,7 @@ function MainTabsDistribuidora() {
                 ]
             }}
         >
-            <Tab.Screen name='Carga' component={Carga} options={{ headerShown: false }} />
+            <Tab.Screen name='Carga' component={Carga}/>
             <Tab.Screen name='Pedidos' component={PedidosDistribuidora} options={{ headerShown: false }} />
             <Tab.Screen name='Perfil' component={PerfilDaDistribuidora} />
         </Tab.Navigator>
