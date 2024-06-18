@@ -1,229 +1,95 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Pressable, ScrollView, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, { useState, useEffect, useContext } from 'react';
+import { View, ScrollView, Text, StyleSheet, RefreshControl } from 'react-native';
+import PedidoCard from '../../components/Cliente/PedidoCard';
+import CategoriaSelector from '../../components/Cliente/SeletorCategoria';
+import { searchRequests } from '../../utils/http';
+import { AuthContext } from '../../context/authContext';
 
-const PedidosDistribuidora = () => {
-    const navigation = useNavigation();
+function PedidosDistribuidora() {
+    const [selectedCategory, setSelectedCategory] = useState('Em Andamento');
+    const [pedidos, setPedidos] = useState([]);
+    const [refreshing, setRefreshing] = useState(false);
+    const { userToken } = useContext(AuthContext);
 
-    const [pedidos, setPedidos] = useState([
-        { 
-            id: 1, 
-            mercado: 'Mercado A', 
-            data: '2024-06-01 10:30', 
-            status: 'Em Analise',
-            produtos: [
-                { nome: 'P. Forma Sal 450', quantidade: 30 },
-                { nome: 'P. Hamburguer c/6 300g', quantidade: 20 },
-                { nome: 'P. Abóbora c/12 380g', quantidade: 5 },
-                { nome: 'P. Batata c/12 380g', quantidade: 5 },
-                { nome: 'P. Petrópolis 450g', quantidade: 10 },
-                { nome: 'P. Cachorro Quente c/12 380g', quantidade: 28 }
-            ] 
-        },
-        { 
-            id: 2, 
-            mercado: 'Mercado B', 
-            data: '2024-06-02 14:15', 
-            status: 'Aceito',
-            produtos: [
-                { nome: 'Bisnaguinha Roma 250g', quantidade: 40 },
-                { nome: 'P. Cenoura 380g', quantidade: 35 },
-                { nome: 'P. Integral 450g', quantidade: 45 },
-                { nome: 'P. Integral Light 450g', quantidade: 10 },
-                { nome: 'P. Milho 380g', quantidade: 15 },
-                { nome: 'Biscoito Povilho Scl. 100g', quantidade: 8 }
-            ] 
-        },
-        { 
-            id: 3, 
-            mercado: 'Mercado C', 
-            data: '2024-06-03 09:45', 
-            status: 'Entregue',
-            produtos: [
-                { nome: 'Rosca Amanteigada', quantidade: 20 },
-                { nome: 'P. Forma pra Bolo 300g', quantidade: 50 },
-                { nome: 'Biscoito Povilho Scl. 70g', quantidade: 10 },
-                { nome: 'P. Hamburguer c/10 550g', quantidade: 15 },
-                { nome: 'P. Integral Light 300g', quantidade: 5 },
-                { nome: 'P. Hot Dog c/10 500g', quantidade: 10 }
-            ] 
-        },
-        { 
-            id: 4, 
-            mercado: 'Mercado D', 
-            data: '2024-06-04 16:30', 
-            status: 'Em Analise',
-            produtos: [
-                { nome: 'P. Forma Sal 450', quantidade: 50 },
-                { nome: 'P. Hamburguer c/6 300g', quantidade: 30 },
-                { nome: 'P. Abóbora c/12 380g', quantidade: 20 },
-                { nome: 'P. Batata c/12 380g', quantidade: 10 },
-                { nome: 'P. Petrópolis 450g', quantidade: 25 },
-                { nome: 'P. Cachorro Quente c/12 380g', quantidade: 40 }
-            ] 
-        }
-    ]);
+    useEffect(() => {
+        fetchPedidos();
+    }, [userToken]);
 
-    const handleAccept = (id) => {
-        setPedidos((prevPedidos) =>
-            prevPedidos.map((pedido) =>
-                pedido.id === id ? { ...pedido, status: 'Aceito' } : pedido
-            )
-        );
-    };
-
-    const handleCancel = (id) => {
-        setPedidos((prevPedidos) =>
-            prevPedidos.map((pedido) =>
-                pedido.id === id ? { ...pedido, status: 'Cancelado' } : pedido
-            )
-        );
-    };
-
-    const getStatusStyle = (status) => {
-        switch (status) {
-            case 'Em Analise':
-                return styles.analise;
-            case 'Aceito':
-                return styles.aceito;
-            case 'Entregue':
-                return styles.entregue;
-            case 'Cancelado':
-                return styles.cancelado;
-            default:
-                return {};
+    const fetchPedidos = async () => {
+        try {
+            const response = await searchRequests(userToken);
+            const pedidosFormatados = response.map(pedido => ({
+                ...pedido,
+                dataHora: formatarDataHora(pedido.dataHora)
+            }));
+            setPedidos(pedidosFormatados);
+        } catch (error) {
+            console.error('Erro ao buscar pedidos:', error.message);
+        } finally {
+            setRefreshing(false);
         }
     };
+
+    // Função para formatar a data e hora
+    const formatarDataHora = (dataHoraString) => {
+        // Divide a string da data/hora pelo caractere "_"
+        const partes = dataHoraString.split('_');
+        // Retorna a nova string no formato desejado: "dd/mm/yyyy hh/mm"
+        return partes[0].replace(/\//g, '-') + ' ' + partes[1].replace(/\//g, ':');
+    };
+
+    const handleCategorySelect = (category) => {
+        setSelectedCategory(category);
+    };
+
+    const onRefresh = () => {
+        setRefreshing(true);
+        fetchPedidos();
+    };
+
+    const filteredPedidos = pedidos.filter((pedido) => pedido.statusPedido === selectedCategory);
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Pedidos</Text>
-            <ScrollView contentContainerStyle={styles.scrollContainer}>
-                {pedidos.map((pedido) => (
-                    <View key={pedido.id} style={[styles.card, getStatusStyle(pedido.status)]}>
-                        <Text style={styles.text}>Pedido {pedido.id}</Text>
-                        <Text style={styles.text}>Mercado: {pedido.mercado}</Text>
-                        <Text style={styles.text}>Data: {pedido.data}</Text>
-                        <View style={styles.spacing} />
-                        {pedido.produtos.map((produto, index) => (
-                            <View key={index} style={styles.produto}>
-                                <Text style={styles.text}>{produto.nome}</Text>
-                                <Text style={styles.text}>Quantidade: {produto.quantidade}</Text>
-                            </View>
-                        ))}
-                        <View style={styles.spacing} />
-                        {pedido.status === 'Em Analise' && (
-                            <View style={styles.buttonContainer}>
-                                <TouchableOpacity
-                                    style={[styles.button, styles.acceptButton]}
-                                    onPress={() => handleAccept(pedido.id)}
-                                >
-                                    <Text style={styles.buttonText}>Aceitar</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    style={[styles.button, styles.cancelButton]}
-                                    onPress={() => handleCancel(pedido.id)}
-                                >
-                                    <Text style={styles.buttonText}>Cancelar</Text>
-                                </TouchableOpacity>
-                            </View>
-                        )}
-                        <View style={styles.spacing} />
-                        <Text style={styles.text}>Status: {pedido.status}</Text>
-                    </View>
-                ))}
+        <View style={{ flex: 1 }}>
+            <CategoriaSelector
+                selectedCategory={selectedCategory}
+                onSelectCategory={handleCategorySelect}
+            />
+            <ScrollView
+                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+            >
+                {filteredPedidos.length === 0 ? (
+                    <Text style={styles.noPedidosText}>Não há pedidos para exibir</Text>
+                ) : (
+                    filteredPedidos.map((pedido, index) => (
+                        <PedidoCard
+                            key={pedido.idPedido}
+                            nomeEmpresa={pedido.nome}
+                            idPedido={pedido.idPedido}
+                            dataHoraPedido={pedido.dataHora}
+                            statusPedido={pedido.statusPedido}
+                            endereco={`${pedido.rua}, ${pedido.numero} - ${pedido.bairro}, ${pedido.cidade} - ${pedido.estado}, CEP: ${pedido.cep}`}
+                            nomeProduto={pedido.nomeComercial}
+                            quantidadeProduto={pedido.quantidade}
+                            descricao={pedido.descricao}
+                            valorUnidade={pedido.valorUnidade}
+                            peso={pedido.peso}
+                            material={pedido.material}
+                            dimensoes={pedido.dimensoes}
+                            fabricante={pedido.fabricante}
+                        />
+                    ))
+                )}
             </ScrollView>
         </View>
     );
-};
+}
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    backButton: {
-        position: 'absolute',
-        top: 20,
-        left: 20,
-        zIndex: 1,
-    },
-    backButtonText: {
+    noPedidosText: {
         fontSize: 16,
-        color: 'blue',
-    },
-    title: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        marginBottom: 20,
-    },
-    scrollContainer: {
-        flexGrow: 1,
-        alignItems: 'center',
-        paddingTop: 10,
-    },
-    card: {
-        backgroundColor: '#ffffff',
-        width: 300,
-        padding: 20,
-        marginBottom: 20,
-        borderRadius: 10,
-        shadowColor: '#000000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
-        borderWidth: 2, // Add border width to all cards
-    },
-    analise: {
-        borderColor: 'red',
-    },
-    aceito: {
-        borderColor: 'yellow',
-    },
-    entregue: {
-        borderColor: 'green',
-    },
-    cancelado: {
-        borderColor: 'black',
-        backgroundColor: 'grey',
-    },
-    produto: {
-        marginTop: 10,
-    },
-    text: {
-        fontSize: 16,
-    },
-    spacing: {
-        height: 10, // You can adjust the height as needed
-    },
-    buttonContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: 10,
-    },
-    button: {
-        flex: 1,
-        padding: 10,
-        borderRadius: 20,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginHorizontal: 5,
-    },
-    acceptButton: {
-        backgroundColor: 'blue',
-    },
-    cancelButton: {
-        backgroundColor: 'red',
-    },
-    buttonText: {
-        color: 'white',
-        fontSize: 16,
-        fontWeight: 'bold',
+        textAlign: 'center',
+        marginTop: 20,
     },
 });
 
