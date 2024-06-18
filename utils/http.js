@@ -134,3 +134,45 @@ export const cancelRequest = async (idPedido, userToken) => {
         throw error.response ? error.response.data : new Error('Erro ao conectar com o servidor');
     }
 };
+
+export const addProduct = async (productData, userToken) => {
+    try {
+        const response = await api.post('/products/add', productData, {
+            headers: {
+                Authorization: `${userToken}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao adicionar produto:', error.response ? error.response.data : error.message);
+        throw error.response ? error.response.data : new Error('Erro ao conectar com o servidor');
+    }
+};
+
+export const editProduct = async (idProduto, productData, userToken) => {
+    try {
+        const response = await api.put(`/products/edit/${idProduto}`, productData, {
+            headers: {
+                Authorization: `${userToken}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao editar produto:', error.response ? error.response.data : error.message);
+        throw error.response ? error.response.data : new Error('Erro ao conectar com o servidor');
+    }
+};
+
+export const deleteProduct = async (idProduto, userToken) => {
+    try {
+        const response = await api.delete(`/products/delete/${idProduto}`, {
+            headers: {
+                Authorization: `${userToken}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao deletar produto:', error.response ? error.response.data : error.message);
+        throw error.response ? error.response.data : new Error('Erro ao conectar com o servidor');
+    }
+};

@@ -16,6 +16,7 @@ import TelaInicial from './screens/TelaInicial';
 import Notificacoes from './screens/Notificacao';
 import { AuthContext, AuthProvider } from './context/authContext';
 import Perfil from './screens/LadoCliente/Perfil';
+import PerfilDaDistribuidora from './screens/LadoDistribuidora/PerfilDaDistribuidora';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -82,10 +83,13 @@ function MainTabsDistribuidora() {
                         iconName = 'list-outline';
                     } else if (route.name === 'Carga') {
                         iconName = 'cube-outline';
+                    } else if (route.name === 'Perfil') {
+                        iconName = 'person-outline';
                     }
                     return <Ionicons name={iconName} size={size} color={color} />;
                 },
             })}
+            
             tabBarOptions={{
                 tabBarActiveTintColor: "#018ABE",
                 tabBarInactiveTintColor: "gray",
@@ -99,6 +103,7 @@ function MainTabsDistribuidora() {
         >
             <Tab.Screen name='Carga' component={ProdutosDistribuidora} options={{ headerShown: false }} />
             <Tab.Screen name='Pedidos' component={PedidosDistribuidora} options={{ headerShown: false }} />
+            <Tab.Screen name='Perfil' component={PerfilDaDistribuidora} />
         </Tab.Navigator>
     );
 }

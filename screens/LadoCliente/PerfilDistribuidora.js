@@ -218,11 +218,11 @@ const styles = StyleSheet.create({
         maxHeight: '60%',
     },
     produtoItem: {
-        flexDirection: 'row',
+        flexDirection: 'column',
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingVertical: 10,
-        paddingHorizontal: 20,
+        paddingHorizontal: '5%',
         backgroundColor: '#E6E4E7',
         marginBottom: 10,
         borderRadius: 10,
@@ -234,6 +234,7 @@ const styles = StyleSheet.create({
     produtoNome: {
         fontSize: 16,
         marginRight: 10,
+        flexShrink: 1
     },
     produtoPreco: {
         fontSize: 16,
