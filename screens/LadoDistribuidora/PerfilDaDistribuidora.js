@@ -1,18 +1,16 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, Modal, Alert, RefreshControl } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, ActivityIndicator, Modal, Alert, RefreshControl, Image, TouchableWithoutFeedback } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { AuthContext } from '../../context/authContext';
 import { getProfileInformation, addProduct, editProduct, deleteProduct } from '../../utils/http';
 import { jwtDecode } from 'jwt-decode';
+import profileImage from '../../assets/foto.png';
 
 const PerfilDaDistribuidora = ({ navigation }) => {
     const { userToken, logout } = useContext(AuthContext);
-    const decodedToken = jwtDecode(userToken);
-    const idProfile = decodedToken.idUsuario;
     const [perfil, setPerfil] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [modalVisible, setModalVisible] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
     const [productDetails, setProductDetails] = useState({
         descricao: '',
@@ -24,6 +22,12 @@ const PerfilDaDistribuidora = ({ navigation }) => {
         dimensoes: '',
         fabricante: '',
     });
+    const [modalVisible, setModalVisible] = useState(false); // Estado para controlar a visibilidade do modal de logout
+    const [modalAddVisible, setModalAddVisible] = useState(false); // Estado para controlar a visibilidade do modal de adicionar produto
+    const [modalEditVisible, setModalEditVisible] = useState(false); // Estado para controlar a visibilidade do modal de editar produto
+    const [idProdutoEditar, setIdProdutoEditar] = useState(null); // Estado para armazenar o ID do produto a ser editado
+
+    const { idUsuario: idProfile } = jwtDecode(userToken); // Extraído do token usando jwtDecode
 
     const loadPerfil = async () => {
         try {
@@ -61,7 +65,6 @@ const PerfilDaDistribuidora = ({ navigation }) => {
         try {
             const response = await addProduct(productDetails, userToken);
             Alert.alert('Sucesso', 'Produto adicionado com sucesso');
-            setModalVisible(false);
             setProductDetails({
                 descricao: '',
                 valorUnidade: '',
@@ -72,17 +75,17 @@ const PerfilDaDistribuidora = ({ navigation }) => {
                 dimensoes: '',
                 fabricante: '',
             });
+            setModalAddVisible(false); // Fechar modal de adicionar produto após adicionar
             await loadPerfil();
         } catch (error) {
             Alert.alert('Erro', 'Erro ao adicionar produto. Tente novamente.');
         }
     };
 
-    const handleProductEdit = async (idProduto) => {
+    const handleProductEdit = async () => {
         try {
-            const response = await editProduct(idProduto, productDetails, userToken);
+            const response = await editProduct(idProdutoEditar, productDetails, userToken);
             Alert.alert('Sucesso', 'Produto editado com sucesso');
-            setModalVisible(false);
             setProductDetails({
                 descricao: '',
                 valorUnidade: '',
@@ -93,6 +96,7 @@ const PerfilDaDistribuidora = ({ navigation }) => {
                 dimensoes: '',
                 fabricante: '',
             });
+            setModalEditVisible(false); // Fechar modal de editar produto após editar
             await loadPerfil();
         } catch (error) {
             Alert.alert('Erro', 'Erro ao editar produto. Tente novamente.');
@@ -138,16 +142,23 @@ const PerfilDaDistribuidora = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <View style={styles.informacoes}>
-                <View style={styles.header}>
-                    <Text style={styles.title}>{perfil.nome}</Text>
+                <Image source={profileImage} style={styles.profileImage} />
+                <View style={styles.headerRight}>
+                    <TouchableOpacity
+                        style={styles.menuButton}
+                        onPress={() => setModalVisible(true)} // Abre o modal de logout ao pressionar os três pontinhos
+                    >
+                        <Ionicons name="ellipsis-vertical" size={24} color="white" />
+                    </TouchableOpacity>
                 </View>
+                <Text style={styles.title}>{perfil.nome}</Text>
                 <Text style={styles.descricao}>{perfil.descricao}</Text>
                 <View style={styles.telefoneContainer}>
-                    <Ionicons name="call-outline" size={24} color="black" style={styles.icon} />
+                    <Ionicons name="call-outline" size={24} color="white" style={styles.icon} />
                     <Text style={styles.telefone}>{formatarTelefone(perfil.telefone)}</Text>
                 </View>
                 <View style={styles.enderecoContainer}>
-                    <Ionicons name="location-outline" size={24} color="black" style={styles.icon} />
+                    <Ionicons name="location-outline" size={24} color="white" style={styles.icon} />
                     <Text style={styles.endereco}>{perfil.endereco}</Text>
                 </View>
             </View>
@@ -165,8 +176,9 @@ const PerfilDaDistribuidora = ({ navigation }) => {
                         <View style={styles.actions}>
                             <TouchableOpacity
                                 onPress={() => {
+                                    setIdProdutoEditar(produto.id);
                                     setProductDetails(produto);
-                                    setModalVisible(true);
+                                    setModalEditVisible(true);
                                 }}
                                 style={styles.editButton}
                             >
@@ -184,124 +196,189 @@ const PerfilDaDistribuidora = ({ navigation }) => {
             </ScrollView>
 
             <View style={styles.footer}>
-                <TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
+                <TouchableOpacity style={styles.addButton} onPress={() => setModalAddVisible(true)}>
                     <Ionicons name="add-outline" size={24} color="white" />
                     <Text style={styles.addButtonText}>Adicionar Produto</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.logoutButton}
-                    onPress={() =>
-                        Alert.alert(
-                            'Confirmar Logout',
-                            'Tem certeza que deseja sair?',
-                            [
-                                {
-                                    text: 'Cancelar',
-                                    style: 'cancel',
-                                },
-                                {
-                                    text: 'Sair',
-                                    onPress: () => handleLogout(),
-                                    style: 'destructive',
-                                },
-                            ],
-                            { cancelable: true }
-                        )
-                    }
-                >
-                    <Ionicons name="log-out-outline" size={24} color="white" />
-                    <Text style={styles.logoutButtonText}>Logout</Text>
-                </TouchableOpacity>
             </View>
 
+            {/* Modal de Logout */}
             <Modal visible={modalVisible} transparent={true} animationType="slide">
-                <View style={styles.modalContainer}>
-                    <View style={styles.modalContent}>
-                        <Text style={styles.modalTitle}>Produto</Text>
-                        <TextInput
-                            placeholder="Nome Comercial"
-                            value={productDetails.nomeComercial}
-                            onChangeText={text => setProductDetails({ ...productDetails, nomeComercial: text })}
-                            style={styles.input}
+                <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+                    <View style={styles.modalContainer}>
+                        <TouchableOpacity
+                            style={styles.modalBackground}
+                            onPress={() => setModalVisible(false)}
                         />
-                        <TextInput
-                            placeholder="Nome Técnico"
-                            value={productDetails.nomeTecnico}
-                            onChangeText={text => setProductDetails({ ...productDetails, nomeTecnico: text })}
-                            style={styles.input}
-                        />
-                        <TextInput
-                            placeholder="Descrição"
-                            value={productDetails.descricao}
-                            onChangeText={text => setProductDetails({ ...productDetails, descricao: text })}
-                            style={styles.input}
-                        />
-                        <TextInput
-                            placeholder="Valor Unidade"
-                            value={productDetails.valorUnidade}
-                            onChangeText={text => setProductDetails({ ...productDetails, valorUnidade: text })}
-                            keyboardType="numeric"
-                            style={styles.input}
-                        />
-                        <TextInput
-                            placeholder="Peso"
-                            value={productDetails.peso}
-                            onChangeText={text => setProductDetails({ ...productDetails, peso: text })}
-                            keyboardType="numeric"
-                            style={styles.input}
-                        />
-                        <TextInput
-                            placeholder="Material"
-                            value={productDetails.material}
-                            onChangeText={text => setProductDetails({ ...productDetails, material: text })}
-                            style={styles.input}
-                        />
-                        <TextInput
-                            placeholder="Dimensões"
-                            value={productDetails.dimensoes}
-                            onChangeText={text => setProductDetails({ ...productDetails, dimensoes: text })}
-                            style={styles.input}
-                        />
-                        <TextInput
-                            placeholder="Fabricante"
-                            value={productDetails.fabricante}
-                            onChangeText={text => setProductDetails({ ...productDetails, fabricante: text })}
-                            style={styles.input}
-                        />
-                        <View style={styles.modalButtons}>
-                            <TouchableOpacity
-                                onPress={() => {
-                                    if (productDetails.id) {
-                                        handleProductEdit(productDetails.id);
-                                    } else {
-                                        handleProductAdd();
-                                    }
-                                }}
-                                style={styles.saveButton}
-                            >
-                                <Text style={styles.saveButtonText}>Salvar</Text>
-                            </TouchableOpacity>
+                        <View style={styles.modalContent}>
                             <TouchableOpacity
                                 onPress={() => {
                                     setModalVisible(false);
-                                    setProductDetails({
-                                        descricao: '',
-                                        valorUnidade: '',
-                                        nomeComercial: '',
-                                        nomeTecnico: '',
-                                        peso: '',
-                                        material: '',
-                                        dimensoes: '',
-                                        fabricante: '',
-                                    });
+                                    Alert.alert(
+                                        'Confirmar Logout',
+                                        'Tem certeza que deseja sair?',
+                                        [
+                                            {
+                                                text: 'Cancelar',
+                                                style: 'cancel',
+                                            },
+                                            {
+                                                text: 'Sair',
+                                                onPress: handleLogout,
+                                                style: 'destructive',
+                                            },
+                                        ],
+                                        { cancelable: true }
+                                    );
                                 }}
-                                style={styles.cancelButton}
+                                style={styles.logoutButtonModal}
                             >
-                                <Text style={styles.cancelButtonText}>Cancelar</Text>
+                                <Ionicons name="log-out-outline" size={24} color="#9c0000" />
+                                <Text style={styles.logoutButtonText}>Logout</Text>
                             </TouchableOpacity>
                         </View>
                     </View>
-                </View>
+                </TouchableWithoutFeedback>
+            </Modal>
+
+            {/* Modal de Adicionar Produto */}
+            <Modal visible={modalAddVisible} transparent={true} animationType="slide">
+                <TouchableWithoutFeedback onPress={() => setModalAddVisible(false)}>
+                    <View style={styles.modalContainer}>
+                        <TouchableOpacity
+                            style={styles.modalBackground}
+                            onPress={() => setModalAddVisible(false)}
+                        />
+                        <View style={styles.modalContent}>
+                            <Text style={styles.modalTitle}>Adicionar Produto</Text>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Descrição"
+                                value={productDetails.descricao}
+                                onChangeText={(text) => setProductDetails({ ...productDetails, descricao: text })}
+                            />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Valor por Unidade"
+                                value={productDetails.valorUnidade}
+                                onChangeText={(text) => setProductDetails({ ...productDetails, valorUnidade: text })}
+                                keyboardType="numeric"
+                            />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Nome Comercial"
+                                value={productDetails.nomeComercial}
+                                onChangeText={(text) => setProductDetails({ ...productDetails, nomeComercial: text })}
+                            />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Nome Técnico"
+                                value={productDetails.nomeTecnico}
+                                onChangeText={(text) => setProductDetails({ ...productDetails, nomeTecnico: text })}
+                            />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Peso"
+                                value={productDetails.peso}
+                                onChangeText={(text) => setProductDetails({ ...productDetails, peso: text })}
+                            />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Material"
+                                value={productDetails.material}
+                                onChangeText={(text) => setProductDetails({ ...productDetails, material: text })}
+                            />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Dimensões"
+                                value={productDetails.dimensoes}
+                                onChangeText={(text) => setProductDetails({ ...productDetails, dimensoes: text })}
+                            />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Fabricante"
+                                value={productDetails.fabricante}
+                                onChangeText={(text) => setProductDetails({ ...productDetails, fabricante: text })}
+                            />
+                            <TouchableOpacity
+                                style={styles.saveButton}
+                                onPress={() => handleProductAdd()}
+                            >
+                                <Text style={styles.saveButtonText}>Adicionar</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </TouchableWithoutFeedback>
+            </Modal>
+
+            {/* Modal de Editar Produto */}
+            <Modal visible={modalEditVisible} transparent={true} animationType="slide">
+                <TouchableWithoutFeedback onPress={() => setModalEditVisible(false)}>
+                    <View style={styles.modalContainer}>
+                        <TouchableOpacity
+                            style={styles.modalBackground}
+                            onPress={() => setModalEditVisible(false)}
+                        />
+                        <View style={styles.modalContent}>
+                            <Text style={styles.modalTitle}>Editar Produto</Text>
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Descrição"
+                                value={productDetails.descricao}
+                                onChangeText={(text) => setProductDetails({ ...productDetails, descricao: text })}
+                            />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Valor por Unidade"
+                                value={productDetails.valorUnidade}
+                                onChangeText={(text) => setProductDetails({ ...productDetails, valorUnidade: text })}
+                                keyboardType="numeric"
+                            />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Nome Comercial"
+                                value={productDetails.nomeComercial}
+                                onChangeText={(text) => setProductDetails({ ...productDetails, nomeComercial: text })}
+                            />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Nome Técnico"
+                                value={productDetails.nomeTecnico}
+                                onChangeText={(text) => setProductDetails({ ...productDetails, nomeTecnico: text })}
+                            />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Peso"
+                                value={productDetails.peso}
+                                onChangeText={(text) => setProductDetails({ ...productDetails, peso: text })}
+                            />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Material"
+                                value={productDetails.material}
+                                onChangeText={(text) => setProductDetails({ ...productDetails, material: text })}
+                            />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Dimensões"
+                                value={productDetails.dimensoes}
+                                onChangeText={(text) => setProductDetails({ ...productDetails, dimensoes: text })}
+                            />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Fabricante"
+                                value={productDetails.fabricante}
+                                onChangeText={(text) => setProductDetails({ ...productDetails, fabricante: text })}
+                            />
+                            <TouchableOpacity
+                                style={styles.saveButton}
+                                onPress={() => handleProductEdit()}
+                            >
+                                <Text style={styles.saveButtonText}>Salvar</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </TouchableWithoutFeedback>
             </Modal>
         </View>
     );
@@ -310,10 +387,11 @@ const PerfilDaDistribuidora = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        //backgroundColor: '#018ABE',
         padding: 20,
     },
     informacoes: {
-        backgroundColor: 'white',
+        backgroundColor: '#018ABE',
         justifyContent: 'center',
         alignItems: 'center',
         shadowColor: '#000',
@@ -328,29 +406,51 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         borderRadius: 10,
     },
-    header: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 20,
+    profileImage: {
+        width: 120,
+        height: 120,
+        borderRadius: 60,
+        marginBottom: 10,
+    },
+    headerRight: {
+        position: 'absolute',
+        right: 10,
+        top: 10,
+    },
+    menuButton: {
+        padding: 10,
     },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
+        color: 'white',
     },
     descricao: {
         fontSize: 16,
+        color: 'white',
+        textAlign: 'center',
         marginBottom: 10,
     },
     telefoneContainer: {
         flexDirection: 'row',
-        marginBottom: 10,
+        alignItems: 'center',
+        marginBottom: 5,
+    },
+    icon: {
+        marginRight: 5,
+    },
+    telefone: {
+        color: 'white',
+        fontSize: 16,
     },
     enderecoContainer: {
         flexDirection: 'row',
-        marginBottom: 10,
+        alignItems: 'center',
+        marginBottom: 20,
     },
-    icon: {
-        marginRight: 10,
+    endereco: {
+        color: 'white',
+        fontSize: 16,
     },
     produtosContainer: {
         marginBottom: 20,
@@ -365,112 +465,94 @@ const styles = StyleSheet.create({
         borderRadius: 10,
     },
     infoProduto: {
-        flexDirection: 'row',
-        alignItems: 'center',
         flex: 1,
     },
     produtoNome: {
-        fontSize: 16,
-        marginRight: 10,
-        flexShrink: 1,
+        fontSize: 18,
     },
     produtoPreco: {
         fontSize: 16,
-        fontWeight: 'bold',
-        flexShrink: 0,
+        color: '#018ABE',
+        marginTop: 5,
     },
     actions: {
         flexDirection: 'row',
-        alignItems: 'center',
     },
     editButton: {
-        marginRight: 10,
+        marginRight: 15,
     },
-    deleteButton: {},
+    deleteButton: {
+
+    },
     footer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+        //padding: 20,
+        //backgroundColor: '#018ABE',
+        alignItems: 'center',
     },
     addButton: {
-        backgroundColor: '#018ABE',
-        padding: 10,
-        borderRadius: 10,
         flexDirection: 'row',
+        backgroundColor: '#018ABE',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 20,
         alignItems: 'center',
     },
     addButtonText: {
         color: 'white',
         marginLeft: 10,
     },
-    logoutButton: {
-        backgroundColor: '#9c0000',
-        padding: 10,
-        borderRadius: 10,
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    logoutButtonText: {
-        color: 'white',
-        marginLeft: 10,
-    },
     modalContainer: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0,0,0,0.5)',
+        justifyContent: 'flex-end',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalBackground: {
+        flex: 1,
     },
     modalContent: {
-        width: '80%',
         backgroundColor: 'white',
-        borderRadius: 10,
         padding: 20,
-        alignItems: 'center',
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
     },
     modalTitle: {
-        fontSize: 24,
+        fontSize: 20,
         fontWeight: 'bold',
         marginBottom: 10,
     },
     input: {
-        width: '100%',
-        padding: 10,
         borderWidth: 1,
         borderColor: '#ccc',
         borderRadius: 5,
+        padding: 10,
         marginBottom: 10,
-    },
-    modalButtons: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        width: '100%',
     },
     saveButton: {
         backgroundColor: '#018ABE',
         padding: 10,
-        borderRadius: 10,
-        flex: 1,
+        borderRadius: 5,
         alignItems: 'center',
-        marginRight: 10,
     },
     saveButtonText: {
         color: 'white',
-        fontWeight: 'bold',
+        fontSize: 16,
     },
-    cancelButton: {
-        backgroundColor: '#9c0000',
-        padding: 10,
-        borderRadius: 10,
-        flex: 1,
+    logoutButtonModal: {
+        flexDirection: 'row',
         alignItems: 'center',
+        paddingVertical: 10,
     },
-    cancelButtonText: {
-        color: 'white',
-        fontWeight: 'bold',
+    logoutButtonText: {
+        color: '#9c0000',
+        fontSize: 18,
+        marginLeft: 10,
     },
     errorText: {
-        color: 'red',
+        flex: 1,
+        backgroundColor: '#018ABE',
+        color: 'white',
         textAlign: 'center',
-        marginTop: 20,
+        textAlignVertical: 'center',
     },
 });
 
