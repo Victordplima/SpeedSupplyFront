@@ -6,7 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import Login from './screens/Login';
 import Cadastro from './screens/CadastroEtapa1';
 import MeusPedidos from './screens/LadoCliente/MeusPedidos';
-import ProdutosDistribuidora from './screens/LadoDistribuidora/ProdutosDistribuidora';
+import Carga from './screens/LadoDistribuidora/Carga';
 import PedidosDistribuidora from './screens/LadoDistribuidora/PedidosDistribuidora';
 import FeedDistribuidora from './screens/LadoCliente/FeedDistribuidora';
 import CadastroEtapa2 from './screens/CadastroEtapa2';
@@ -101,7 +101,7 @@ function MainTabsDistribuidora() {
                 ]
             }}
         >
-            <Tab.Screen name='Carga' component={ProdutosDistribuidora} options={{ headerShown: false }} />
+            <Tab.Screen name='Carga' component={Carga} options={{ headerShown: false }} />
             <Tab.Screen name='Pedidos' component={PedidosDistribuidora} options={{ headerShown: false }} />
             <Tab.Screen name='Perfil' component={PerfilDaDistribuidora} />
         </Tab.Navigator>

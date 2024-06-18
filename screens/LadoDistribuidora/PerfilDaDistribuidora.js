@@ -140,7 +140,7 @@ const PerfilDaDistribuidora = ({ navigation }) => {
     };
 
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             <View style={styles.informacoes}>
                 <Image source={profileImage} style={styles.profileImage} />
                 <View style={styles.headerRight}>
@@ -163,7 +163,14 @@ const PerfilDaDistribuidora = ({ navigation }) => {
                 </View>
             </View>
 
-            <ScrollView
+            <View style={styles.footer}>
+                <TouchableOpacity style={styles.addButton} onPress={() => setModalAddVisible(true)}>
+                    <Ionicons name="add-outline" size={24} color="white" />
+                    <Text style={styles.addButtonText}>Adicionar Produto</Text>
+                </TouchableOpacity>
+            </View>
+
+            <View
                 style={styles.produtosContainer}
                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
             >
@@ -193,14 +200,9 @@ const PerfilDaDistribuidora = ({ navigation }) => {
                         </View>
                     </View>
                 ))}
-            </ScrollView>
-
-            <View style={styles.footer}>
-                <TouchableOpacity style={styles.addButton} onPress={() => setModalAddVisible(true)}>
-                    <Ionicons name="add-outline" size={24} color="white" />
-                    <Text style={styles.addButtonText}>Adicionar Produto</Text>
-                </TouchableOpacity>
             </View>
+
+
 
             {/* Modal de Logout */}
             <Modal visible={modalVisible} transparent={true} animationType="slide">
@@ -380,7 +382,7 @@ const PerfilDaDistribuidora = ({ navigation }) => {
                     </View>
                 </TouchableWithoutFeedback>
             </Modal>
-        </View>
+        </ScrollView>
     );
 };
 
@@ -496,6 +498,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         borderRadius: 20,
         alignItems: 'center',
+        marginBottom: 20,
     },
     addButtonText: {
         color: 'white',
