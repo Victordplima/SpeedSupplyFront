@@ -4,7 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import Login from './screens/Login';
-import Cadastro from './screens/CadastroEtapa1';
+import Cadastro from './screens/Cadastro';
 import MeusPedidos from './screens/LadoCliente/MeusPedidos';
 import Carga from './screens/LadoDistribuidora/Carga';
 import PedidosDistribuidora from './screens/LadoDistribuidora/PedidosDistribuidora';
@@ -107,7 +107,6 @@ function MainTabsDistribuidora() {
         </Tab.Navigator>
     );
 }
-
 
 
 function LoginCadastroStack() {

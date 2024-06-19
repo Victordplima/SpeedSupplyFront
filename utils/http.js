@@ -18,6 +18,8 @@ export const login = async (email, senha) => {
 
 export const signup = async (userData) => {
     try {
+        console.log('Dados enviados para a API:', userData);
+
         const response = await axios.post(`${API_URL}/users/signup`, {
             ...userData,
             descricao: null,
@@ -173,6 +175,48 @@ export const deleteProduct = async (idProduto, userToken) => {
         return response.data;
     } catch (error) {
         console.error('Erro ao deletar produto:', error.response ? error.response.data : error.message);
+        throw error.response ? error.response.data : new Error('Erro ao conectar com o servidor');
+    }
+};
+
+export const acceptRequest = async (idPedido, userToken) => {
+    try {
+        const response = await api.put(`/requests/accept/${idPedido}`, {}, {
+            headers: {
+                Authorization: `${userToken}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao aceitar pedido:', error.response ? error.response.data : error.message);
+        throw error.response ? error.response.data : new Error('Erro ao conectar com o servidor');
+    }
+};
+
+export const rejectRequest = async (idPedido, userToken) => {
+    try {
+        const response = await api.put(`/requests/reject/${idPedido}`, {}, {
+            headers: {
+                Authorization: `${userToken}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao rejeitar pedido:', error.response ? error.response.data : error.message);
+        throw error.response ? error.response.data : new Error('Erro ao conectar com o servidor');
+    }
+};
+
+export const deliverRequest = async (idPedido, userToken) => {
+    try {
+        const response = await api.put(`/requests/request/${idPedido}`, {}, {
+            headers: {
+                Authorization: `${userToken}`,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Erro ao marcar pedido como entregue:', error.response ? error.response.data : error.message);
         throw error.response ? error.response.data : new Error('Erro ao conectar com o servidor');
     }
 };
